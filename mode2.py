@@ -47,8 +47,9 @@ plt.show()
 # convert the signal to frequency domain
 sound_fft = fft(sound)
 fft_length = len(sound_fft)
-sound_frequencies = fftfreq(fft_length, 1 / SAMPLING_RATE)[:fft_length// 2]
-sound_amplitudes = np.abs(sound_fft)[:fft_length // 2]
+sound_frequencies = fftfreq(fft_length, 1 / SAMPLING_RATE)
+sound_amplitudes = np.abs(sound_fft)
+sound_phases = np.angle(sound_fft)
 # show the amplitude spectrum
 plt.figure(figsize=(8,6))
 plt.plot(sound_frequencies,sound_amplitudes)
@@ -56,11 +57,33 @@ plt.show()
 ##################################################### processing part ###############################
 
 
+############################### remove wolf sound #############################
+# for poistive part
+f_start = 320
+f_end = 904
+n_start = int((f_start/SAMPLING_RATE) * fft_length)
+n_end = int((f_end/SAMPLING_RATE )* fft_length)
+sound_amplitudes[n_start:n_end] = 0
+# for negative part
+temp_f_start = f_start
+f_start = -f_end
+f_end = -temp_f_start
+n_start = int(fft_length - (-f_start/SAMPLING_RATE) * fft_length)
+n_end = int(fft_length - (-f_end/SAMPLING_RATE )* fft_length)
+sound_amplitudes[n_start:n_end] = 0
+############################################################################
 
+sound_mod = sound_amplitudes * np.exp( 1j * sound_phases )
+###############################################################
+# show the amplitude spectrum
 
+plt.figure(figsize=(8,6))
+plt.plot(sound_frequencies,sound_amplitudes)
+plt.show()
 
 # convert the signal to time domain
-manipulated_sound = ifft(sound_fft).real
+manipulated_sound = ifft(sound_mod).real
+
 # show signal in time domain
 plt.figure(figsize=(8,6))
 plt.plot(t,manipulated_sound)
