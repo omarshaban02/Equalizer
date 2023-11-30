@@ -72,11 +72,17 @@ plt.show()
 ##################################################### processing part ###############################
 freqs,times,sxx = stft(sound,fs=SAMPLING_RATE)
 
-n_start = int(5* 2575/duration)
-n_end = int(7* 2575/duration)
-components_indices = [i for i in range(6,15)]
-for i in components_indices:
-    sxx[i, n_start:] *=0
+freq_components = [
+    ('elephant',[3,4,*[i for i in range(6,21)]], [5,-1]),
+    ('wolf',[4,5,8], [3,6]),
+    ]
+for animal_tuple in freq_components:
+    n_start = int(animal_tuple[2][0]* 2575/duration)
+    n_end = int(animal_tuple[2][1]* 2575/duration)
+    if n_end < 0 : n_end = -1
+    for i in animal_tuple[1]:
+        sxx[i, n_start:n_end] =0
+
 print(freqs)
 _,signal_modified = istft(sxx, fs=SAMPLING_RATE)
 
