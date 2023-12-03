@@ -289,5 +289,17 @@
     <file>icons/new-documentF.png</file>
     <file>icons/open-folderF.png</file>
     <file>icons/open-folder.png</file>
+    <file>icons/cow.png</file>
+    <file>icons/dolphin.png</file>
+    <file>icons/elephant.png</file>
+    <file>icons/flute.png</file>
+    <file>icons/frog-.png</file>
+    <file>icons/goat.png</file>
+    <file>icons/guitar.png</file>
+    <file>icons/horse.png</file>
+    <file>icons/piano.png</file>
+    <file>icons/trumpet.png</file>
+    <file>icons/wolf.png</file>
+
   </qresource>
 </RCC>
