@@ -76,7 +76,7 @@ for channel in channels:
     freqs, times, sxx = stft(channel, fs=SAMPLING_RATE)
 
     freq_components = [
-        #('elephant',[3,4,*[i for i in range(6,21)]], [5,-1]),
+        ('elephant',[*[i for i in range(0,129)]], [0,1]),
         # ('wolf',[4,5,8,10,11,2,3], [3,6]),
         # ('horse',[i for i in range(4,18)], [2,3.5]),
         # ('horse',[i for i in range(4,18)], [6,7]),
@@ -91,6 +91,7 @@ for channel in channels:
         for i in animal_tuple[1]:
             sxx[i, n_start:n_end] =0
     print(freqs)
+    
     _, modified_channel= istft(sxx, fs=SAMPLING_RATE)
     modified_channels.append(modified_channel)
 modified_channels = np.array(modified_channels,dtype=np.int16)
