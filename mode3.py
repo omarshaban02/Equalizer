@@ -37,11 +37,12 @@ stream.close()
 # close PyAudio
 p.terminate()
 
-channels = np.asarray(np.split(sound,nchannels,axis=0),dtype=np.int16)
+# channels = np.asarray(np.split(sound,nchannels,axis=0),dtype=np.int16)
 
 ###################################################### editing sound  ################################
 
-N = channels[0].shape[0]
+N = int(sound.shape[0]/2) # per channel
+
 duration = N / SAMPLING_RATE
 t = np.linspace(0, duration, N, endpoint=False)
     # # show signal in time domain
@@ -71,30 +72,29 @@ t = np.linspace(0, duration, N, endpoint=False)
 #plt.show()
 
 ##################################################### processing part ###############################
-modified_channels = []
-for channel in channels:
-    freqs, times, sxx = stft(channel, fs=SAMPLING_RATE)
 
-    freq_components = [
-        ('elephant',[*[i for i in range(0,129)]], [0,1]),
-        # ('wolf',[4,5,8,10,11,2,3], [3,6]),
-        # ('horse',[i for i in range(4,18)], [2,3.5]),
-        # ('horse',[i for i in range(4,18)], [6,7]),
-        # ('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]),
-        # ('cow',[i for i in range(0,25)], [0,1]),
-        # ('birds',[i for i in range(0,30)], [1,2.5]),
-        ]
-    for animal_tuple in freq_components:
-        n_start = int(animal_tuple[2][0]* times.shape[0]/duration)
-        n_end = int(animal_tuple[2][1]* times.shape[0]/duration)
-        if n_end < 0 : n_end = -1
-        for i in animal_tuple[1]:
-            sxx[i, n_start:n_end] =0
-    print(freqs)
+freqs, times, sxx = stft(sound, fs=SAMPLING_RATE)
+
+freq_components = [
+    ('elephant',[*[i for i in range(0,129)]], [0,5]),
+    # ('wolf',[4,5,8,10,11,2,3], [3,6]),
+    # ('horse',[i for i in range(4,18)], [2,3.5]),
+    # ('horse',[i for i in range(4,18)], [6,7]),
+    # ('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]),
+    # ('cow',[i for i in range(0,25)], [0,1]),
+    # ('birds',[i for i in range(0,30)], [1,2.5]),
+    ]
+for animal_tuple in freq_components:
+    n_start = int(animal_tuple[2][0]* times.shape[0]/duration)
+    n_end = int(animal_tuple[2][1]* times.shape[0]/duration)
+    if n_end < 0 : n_end = -1
+    for i in animal_tuple[1]:
+        sxx[i, n_start:n_end] =0
+print(freqs)
     
-    _, modified_channel= istft(sxx, fs=SAMPLING_RATE)
-    modified_channels.append(modified_channel)
-modified_channels = np.array(modified_channels,dtype=np.int16)
+_, modified_sound= istft(sxx, fs=SAMPLING_RATE)
+  
+modified_channels = np.array(np.split(modified_sound,nchannels,axis=0),dtype=np.int16)
 ############################### remove wolf sound #############################
 # for poistive part
 # f_start = 320
