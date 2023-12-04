@@ -28,7 +28,8 @@ class MainApp(QMainWindow, ui):
         self.setupUi(self)
         self.resize(1450, 900)
 
-        self.animals_sliders_frame.setVisible(True)
+        self.uniform_sliders_frame.setVisible(True)
+        self.animals_sliders_frame.setVisible(False)
         self.music_sliders_frame.setVisible(False)
         self.ecg_sliders_frame.setVisible(False)
 
@@ -97,15 +98,23 @@ class MainApp(QMainWindow, ui):
 
 
     def change_sliders_for_modes(self, text):
+        if text == "Uniform Mode":
+            self.uniform_sliders_frame.setVisible(True)
+            self.animals_sliders_frame.setVisible(False)
+            self.music_sliders_frame.setVisible(False)
+            self.ecg_sliders_frame.setVisible(False)
         if text == "Animal Mode":
+            self.uniform_sliders_frame.setVisible(False)
             self.animals_sliders_frame.setVisible(True)
             self.music_sliders_frame.setVisible(False)
             self.ecg_sliders_frame.setVisible(False)
         if text == "Musical Mode":
+            self.uniform_sliders_frame.setVisible(False)
             self.animals_sliders_frame.setVisible(False)
             self.music_sliders_frame.setVisible(True)
             self.ecg_sliders_frame.setVisible(False)
         if text == "ECG Mode":
+            self.uniform_sliders_frame.setVisible(False)
             self.animals_sliders_frame.setVisible(False)
             self.music_sliders_frame.setVisible(False)
             self.ecg_sliders_frame.setVisible(True)
