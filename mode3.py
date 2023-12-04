@@ -24,6 +24,8 @@ data = f.readframes(chunk)
 nchannels = f.getnchannels()
 sound = np.frombuffer(data, dtype=np.int16)
 SAMPLING_RATE = f.getframerate()
+N = f.getnframes()
+duration = N / SAMPLING_RATE
 # play stream
 while data:
     stream.write(data)
@@ -41,9 +43,8 @@ p.terminate()
 
 ###################################################### editing sound  ################################
 
-N = int(sound.shape[0]/2) # per channel
 
-duration = N / SAMPLING_RATE
+
 t = np.linspace(0, duration, N, endpoint=False)
     # # show signal in time domain
     # plt.figure(figsize=(8, 6))
