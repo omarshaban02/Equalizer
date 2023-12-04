@@ -21,7 +21,6 @@ stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
                 output=True)
 # read data
 data = f.readframes(chunk)
-
 sound = np.frombuffer(data, dtype=np.int16)
 SAMPLING_RATE = f.getframerate()
 # play stream
@@ -36,6 +35,8 @@ stream.close()
 
 # close PyAudio
 p.terminate()
+
+
 
 ###################################################### editing sound  ################################
 
@@ -62,7 +63,7 @@ plt.plot(sound_frequencies, 20 * np.log10(sound_amplitudes))
 f_spectro, t_spectro, zxx = spectrogram(sound, fs=SAMPLING_RATE)
 # use gouraud shading to smooth the colors of the spectrogram
 
-plt.pcolormesh(t_spectro, f_spectro[:20], zxx[:20, :], shading='gouraud')
+plt.pcolormesh(t_spectro, f_spectro[:20], zxx[:20,:], shading='gouraud')
 plt.xlabel('Time (Seconds)')
 plt.ylabel('Frequency (Hz)')
 plt.title('Spectrogram of the sound')
@@ -72,17 +73,17 @@ plt.title('Spectrogram of the sound')
 freqs, times, sxx = stft(sound, fs=SAMPLING_RATE)
 
 freq_components = [
-    ('elephant',[3,4,*[i for i in range(6,21)]], [5,-1]),
-    ('wolf',[4,5,8,10,11,2,3], [3,6]),
-    ('horse',[i for i in range(4,18)], [2,3.5]),
-    ('horse',[i for i in range(4,18)], [6,7]),
-    ('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]),
-    ('cow',[i for i in range(0,25)], [0,1]),
-    ('birds',[i for i in range(0,30)], [1,2.5]),
+    # ('elephant',[3,4,*[i for i in range(6,21)]], [5,-1]),
+    # ('wolf',[4,5,8,10,11,2,3], [3,6]),
+    # ('horse',[i for i in range(4,18)], [2,3.5]),
+    # ('horse',[i for i in range(4,18)], [6,7]),
+    # ('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]),
+    # ('cow',[i for i in range(0,25)], [0,1]),
+    # ('birds',[i for i in range(0,30)], [1,2.5]),
     ]
 for animal_tuple in freq_components:
-    n_start = int(animal_tuple[2][0]* 2575/duration)
-    n_end = int(animal_tuple[2][1]* 2575/duration)
+    n_start = int(animal_tuple[2][0]* times.shape[0]/duration)
+    n_end = int(animal_tuple[2][1]* times.shape[0]/duration)
     if n_end < 0 : n_end = -1
     for i in animal_tuple[1]:
         sxx[i, n_start:n_end] =0

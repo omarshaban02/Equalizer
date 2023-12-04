@@ -141,4 +141,4 @@ with wave.open("output_music_mode.wav", "wb") as out_file:
     out_file.setsampwidth(bitrate // 8)
     for channel in modified_channels:
         out_file.writeframes(channel.tobytes())
-    
+     
