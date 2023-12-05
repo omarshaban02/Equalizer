@@ -7,9 +7,11 @@ from scipy.signal import stft, istft
 from scipy.signal import windows, spectrogram
 import matplotlib.pyplot as plt
 import pyqtgraph as pg
-
-class Player(object):
+from threading import Thread
+from time import sleep
+class Player(Thread):
     def __init__(self, signal):
+        Thread.__init__(self)
         self._signal = signal
         self._pyaudio = pyaudio.PyAudio()
         self._stream = None
@@ -92,6 +94,8 @@ class Player(object):
 
     def resume(self):
         self.is_playing= True
+        while self.is_playing:
+            self.advance()
 
     def pause(self):
         self.is_playing= False
@@ -118,7 +122,8 @@ class Player(object):
             self.current_bytes = self.data[start:end].tobytes()
             self.current_index = end
             self.stream.write(self.current_bytes)
-            
+    def run(self):
+        self.play()
 
 class Signal(object):
     def __init__(self):
@@ -371,6 +376,10 @@ class Signal(object):
 sig = Signal()
 sig.open(r"signal_files/animals.wav", mode='stft')
 p = Player(sig)
-p.play()
-p.stop()
+p.start()
+sleep(1)
+p.pause()
+sleep(1)
+p.resume()
+p.join()
         
