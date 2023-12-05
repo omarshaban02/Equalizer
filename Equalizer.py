@@ -14,7 +14,6 @@ class Player(object):
         self._pyaudio = pyaudio.PyAudio()
         self._stream = None
         self._chunk = 1024
-        self._current_bytes = None
         self._is_playing = True
         self._data = None
         self._current_index = 0
@@ -24,6 +23,8 @@ class Player(object):
             self._data = signal.signal_istft
         else:
             raise ValueError('Invalid signal mode')
+        
+        self._current_bytes = self.data[:self.chunk].tobytes()
         
     @property
     def data(self):
@@ -99,7 +100,15 @@ class Player(object):
     def stop(self):
         pass
     def advance(self):
-        pass
+        start = self.current_index
+        end = self.current_index + self.chunk
+        if end >= len(self.data):
+            self.current_bytes = self.data[start:].to_bytes()
+            self.current_index = len(self.data)-1
+        else:
+            self.current_bytes = self.data[start:end].to_bytes()
+            self.current_index = end
+            
 
 class Signal(object):
     def __init__(self):
