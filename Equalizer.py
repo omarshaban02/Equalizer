@@ -8,6 +8,98 @@ from scipy.signal import windows, spectrogram
 import matplotlib.pyplot as plt
 import pyqtgraph as pg
 
+class Player(object):
+    def __init__(self, signal):
+        self._signal = signal
+        self._pyaudio = pyaudio.PyAudio()
+        self._stream = None
+        self._chunk = 1024
+        self._current_bytes = None
+        self._is_playing = True
+        self._data = None
+        self._current_index = 0
+        if signal.mode == 'fft':
+            self._data = signal.signal_ifft
+        elif signal.mode == 'stft':
+            self._data = signal.signal_istft
+        else:
+            raise ValueError('Invalid signal mode')
+        
+    @property
+    def data(self):
+        return self._data
+    
+    @property
+    def current_index(self):
+        return self._current_index
+    
+    @current_index.setter
+    def current_index(self,value):
+        self._current_index = value
+    
+    @property
+    def signal(self):
+        return self._signal
+    
+    @signal.setter
+    def signal(self,value):
+        self._signal = value
+
+    @property
+    def is_playing(self):
+        return self._is_playing
+    @is_playing.setter
+    def is_playing(self,value):
+        self._is_playing = value
+    @property  
+    def pyaudio(self):
+        return self._pyaudio
+    @pyaudio.setter
+    def pyaudio(self,value):
+        self._pyaudio = value
+    @property
+    def stream(self):
+        return self._stream
+    @stream.setter
+    def stream(self,value):
+        self._stream = value
+    @property
+    def chunk(self):
+        return self._chunk
+    @chunk.setter
+    def chunk(self,value):
+        self._chunk = value
+    @property
+    def current_bytes(self):
+        return self._current_bytes
+    @current_bytes.setter
+    def current_bytes(self,value):
+        self._current_bytes = value
+
+
+    def play(self):
+        self.is_playing= True
+        if self.stream is not None:
+            self.stop()
+        self.stream = self.pyaudio.open(format=self.pyaudio.get_format_from_width(self.signal.sample_width),
+                                        channels=self.signal.nchannels,
+                                        rate=self.signal.sampling_rate,
+                                        output=True)
+        while self.is_playing:
+            self.stream.write(self.current_bytes)
+            self.advance()
+
+    def resume(self):
+        pass
+    def pause(self):
+        pass
+    def replay(self):
+        if self.stream is not None:
+            self.stop()
+    def stop(self):
+        pass
+    def advance(self):
+        pass
 
 class Signal(object):
     def __init__(self):
@@ -18,14 +110,17 @@ class Signal(object):
         self._signal_istft = None
         self._n_time_segments = None
         self._signal_zxx = None
-        self._mode = 'fft' # or 'stft'
         self._signal_stft_freqs = None
+        self._mode = 'fft' # or 'stft'
+        self._nchannels = 1 # monophonic sound or stereo sound
+        self._sound_type = 'monophonic' # mono or stereo
         self._sampling_rate = None
         self._signal_frequencies = None
         self._signal_amplitudes = None
         self._signal_phases = None
         self._duration = None
         self._number_of_samples = None
+        self._sample_width = None
         self._signal_sound = None 
         self._stream = None 
         self._signal_spectrogram = None
@@ -59,17 +154,28 @@ class Signal(object):
     def signal_ifft(self):
         self._signal_ifft = ifft(self.signal_fft).real
         return self._signal_ifft
-
+    @property
+    def signal_istft(self):
+        _, self._signal_istft = istft(self.signal_zxx)
+        return self._signal_istft
     @property
     def number_of_samples(self):
-        self._number_of_samples = len(self.original_signal)
+        self._number_of_samples = len(self.original_signal)/self.nchannels
         return self._number_of_samples
-
+    @property
+    def signal_stft_freqs(self):
+        self._signal_stft_freqs =self.signal_stft[0]
+        return self._signal_stft_freqs
     @property
     def duration(self):
         self._duration = self.number_of_samples / self.sampling_rate
         return self._duration
-    
+    @property
+    def sample_width(self):
+        return self._sample_width
+    @sample_width.setter
+    def sample_width(self, value):
+        self._sample_width = value
     @property
     def sampling_rate(self):
         return self._sampling_rate
@@ -113,19 +219,77 @@ class Signal(object):
     def components_data(self, value):
         self._components_data = value
 
+    @property
+    def nchannels(self):
+        return self._nchannels
+    
+    @nchannels.setter
+    def nchannels(self, value):
+        if value == 1:
+            self._sound_type = 'monophonic'
+        elif value == 2:
+            self._sound_type = 'stereo'
+        else:
+            raise ValueError('Invalid value')
+        self._nchannels = value
+    @property
+    def sound_type(self):
+        return self._sound_type
+    @sound_type.setter
+    def sound_type(self, value):
+        raise ValueError('read-only property')
+    @property
+    def mode(self):
+        return self._mode
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+    @property
+    def signal_stft(self):
+        return self._signal_stft
+    @signal_stft.setter
+    def signal_stft(self, value):
+        self._signal_stft = value
+    @property
+    def n_time_segments(self):
+        return self._n_time_segments
+    @n_time_segments.setter
+    def n_time_segments(self, value):
+        self._n_time_segments = value
+    @property
+    def signal_zxx(self):
+        return self._signal_zxx
+    @signal_zxx.setter
+    def signal_zxx(self, value):
+        self.signal_zxx = value
+
 
     def equalize(self, window_type, equalizing_factor,freqs_range = None, slice_name = None):
+        # apply stft
         if slice_name is not None:
             for slice in self.components_data:
                 if slice[0] == slice_name:
                     freqs_indices = slice[1]
                     time_range = slice[2]
                     window = 0
-                    window_length = 0
+                    window_length = len(freqs_indices)
                     if window_type == 'hamming':
                         window = windows.hamming(window_length) * equalizing_factor
-
-
+                    elif window_type == 'hanning':
+                        window = windows.hann(window_length) * equalizing_factor
+                    elif window_type == 'gaussian':
+                        window = windows.gaussian(window_length) * equalizing_factor
+                    elif window_type == 'rectangle':
+                        window = np.ones(window_length)*equalizing_factor
+                    else:
+                        raise ValueError('Unknown window')
+                    
+                    n_start = int(time_range[0]* self.n_time_segments/self.duration)
+                    n_end = int(time_range[1]* self.n_time_segments/self.duration)
+                    if n_end < 0 : n_end = -1
+                    for i in freqs_indices:
+                        self.signal_zxx[i, n_start:n_end] *= window[i]
+        # apply fft
         if freqs_range is not None:
             f_start = freqs_range[0]
             f_end = freqs_range[1]
@@ -143,6 +307,8 @@ class Signal(object):
                 window = windows.gaussian(window_length) * equalizing_factor
             elif window_type == 'rectangle':
                 window =  equalizing_factor
+            else:
+                raise ValueError('Unknown window')
 
             self.signal_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
             # for negative part
@@ -156,14 +322,31 @@ class Signal(object):
     def import_signal(self):
         pass
     
-    def open(self,file):
+    def open(self,file,mode= 'fft'):
         file = wave.open(file, "rb")
         nframes = file.getnframes()
         data = file.readframes(nframes)
         self.original_signal = np.frombuffer(data, dtype=np.int16)
         self.sampling_rate = file.getframerate()
-        self.signal_fft  = fft(self.original_signal)
-        self.signal_amplitudes = np.abs(self.signal_fft)
-        self.signal_phases = np.angle(self.signal_fft)
+        self.sample_width = file.getsampwidth()
+        
+        if mode == 'fft':
+            self.mode = 'fft'
+            self.signal_fft  = fft(self.original_signal)
+            self.signal_amplitudes = np.abs(self.signal_fft)
+            self.signal_phases = np.angle(self.signal_fft)
+        elif mode == 'stft':
+            self.mode = 'stft'
+            self.signal_fft  = fft(self.original_signal)
+            self.signal_amplitudes = np.abs(self.signal_fft)
+            self.signal_phases = np.angle(self.signal_fft)
+            self.signal_stft = stft(self.original_signal,fs=self.sampling_rate)
+            self.signal_zxx = self.signal_stft[2]
+            self.n_time_segments = len(self.signal_stft[1])
+            
+        else:
+            raise ValueError('Invalid mode')
+        
+            
 
         
