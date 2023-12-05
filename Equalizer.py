@@ -18,13 +18,13 @@ class Player(object):
         self._data = None
         self._current_index = 0
         if signal.mode == 'fft':
-            self._data = signal.signal_ifft
+            self._data = np.array(signal.signal_ifft ,dtype=np.int16)
         elif signal.mode == 'stft':
-            self._data = signal.signal_istft
+            self._data = np.array(signal.signal_istft ,dtype=np.int16)
         else:
             raise ValueError('Invalid signal mode')
         
-        self._current_bytes = self.data[:self.chunk].tobytes()
+        self._current_bytes = None
         
     @property
     def data(self):
@@ -87,27 +87,37 @@ class Player(object):
                                         rate=self.signal.sampling_rate,
                                         output=True)
         while self.is_playing:
-            self.stream.write(self.current_bytes)
             self.advance()
+            
 
     def resume(self):
-        pass
+        self.is_playing= True
+
     def pause(self):
-        pass
+        self.is_playing= False
+
     def replay(self):
         if self.stream is not None:
             self.stop()
     def stop(self):
-        pass
+        self.pause()
+        self.stream.stop_stream()
+        self.stream.close()
+        self.pyaudio.terminate()
+        
+
     def advance(self):
         start = self.current_index
         end = self.current_index + self.chunk
-        if end >= len(self.data):
-            self.current_bytes = self.data[start:].to_bytes()
+        if end >= len(self.data)-1:
+            self.current_bytes = self.data[start:].tobytes()
             self.current_index = len(self.data)-1
+            self.stream.write(self.current_bytes)
+            self.stop()
         else:
-            self.current_bytes = self.data[start:end].to_bytes()
+            self.current_bytes = self.data[start:end].tobytes()
             self.current_index = end
+            self.stream.write(self.current_bytes)
             
 
 class Signal(object):
@@ -151,7 +161,7 @@ class Signal(object):
 
     @property
     def signal_fft(self):
-        self._signal_fft  = self.signal_amplitudes * np.exp(self.signal_phases * 1j)
+        self._signal_fft  = self.signal_amplitudes * np.exp( self.signal_phases * 1j)
         return self._signal_fft
 
     @signal_fft.setter
@@ -270,7 +280,7 @@ class Signal(object):
         return self._signal_zxx
     @signal_zxx.setter
     def signal_zxx(self, value):
-        self.signal_zxx = value
+        self._signal_zxx = value
 
 
     def equalize(self, window_type, equalizing_factor,freqs_range = None, slice_name = None):
@@ -341,14 +351,15 @@ class Signal(object):
         
         if mode == 'fft':
             self.mode = 'fft'
-            self.signal_fft  = fft(self.original_signal)
-            self.signal_amplitudes = np.abs(self.signal_fft)
-            self.signal_phases = np.angle(self.signal_fft)
+            sig_fft = fft(self.original_signal)
+            self.signal_amplitudes = np.abs(sig_fft)
+            self.signal_phases = np.angle(sig_fft)
+           
         elif mode == 'stft':
             self.mode = 'stft'
-            self.signal_fft  = fft(self.original_signal)
-            self.signal_amplitudes = np.abs(self.signal_fft)
-            self.signal_phases = np.angle(self.signal_fft)
+            sig_fft = fft(self.original_signal)
+            self.signal_amplitudes = np.abs(sig_fft)
+            self.signal_phases = np.angle(sig_fft)
             self.signal_stft = stft(self.original_signal,fs=self.sampling_rate)
             self.signal_zxx = self.signal_stft[2]
             self.n_time_segments = len(self.signal_stft[1])
@@ -357,5 +368,9 @@ class Signal(object):
             raise ValueError('Invalid mode')
         
             
-
+sig = Signal()
+sig.open(r"signal_files/animals.wav", mode='stft')
+p = Player(sig)
+p.play()
+p.stop()
         
