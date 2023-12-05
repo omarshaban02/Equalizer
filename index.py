@@ -13,25 +13,29 @@ from res_rc import *  # Import the resource module
 from PyQt5.uic import loadUiType
 import urllib.request
 
-
+from Equalizer import Signal
+import SignalViewer as sv
 
 ui, _ = loadUiType('main.ui')
 
 
-
 class MainApp(QMainWindow, ui):
-
     _show_hide_flag = True
+
     def __init__(self, parent=None):
         super(MainApp, self).__init__(parent)
         QMainWindow.__init__(self)
         self.setupUi(self)
         self.resize(1450, 900)
 
+        self.signal = Signal()
+
         self.uniform_sliders_frame.setVisible(True)
         self.animals_sliders_frame.setVisible(False)
         self.music_sliders_frame.setVisible(False)
         self.ecg_sliders_frame.setVisible(False)
+
+        self.play_pause_status = True
 
         self.original_plot_widget = pg.PlotWidget(self.original_graphics_view)
         self.graphics_view_layout1 = QHBoxLayout(self.original_graphics_view)
@@ -40,9 +44,11 @@ class MainApp(QMainWindow, ui):
         self.original_plot_widget.setObjectName("original_plot_widget")
         self.original_plot_widget.setBackground((25, 35, 45))
         self.original_plot_widget.showGrid(x=True, y=True)
-        self.original_plot_widget.setLabel("bottom", text = "Frequency (Hz)")
-        self.original_plot_widget.setLabel("left", text = "Amplitude (mV)")
+        self.original_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.original_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.original_plot_widget.setTitle("Original Signal")
+
+        self.original_signal_viewer = sv.SignalViewerLogic(self.original_plot_widget)
 
         self.equalized_plot_widget = pg.PlotWidget(self.equalized_graphics_view)
         self.graphics_view_layout1 = QHBoxLayout(self.equalized_graphics_view)
@@ -51,21 +57,24 @@ class MainApp(QMainWindow, ui):
         self.equalized_plot_widget.setObjectName("equalized_plot_widget")
         self.equalized_plot_widget.setBackground((25, 35, 45))
         self.equalized_plot_widget.showGrid(x=True, y=True)
-        self.equalized_plot_widget.setLabel("bottom", text = "Frequency (Hz)")
-        self.equalized_plot_widget.setLabel("left", text = "Amplitude (mV)")
+        self.equalized_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.equalized_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.equalized_plot_widget.setTitle("Equalized Signal")
 
+        self.equalized_signal_viewer = sv.SignalViewerLogic(self.equalized_plot_widget)
 
-        self.orignal_spectro_plot_widget = pg.PlotWidget(self.orignal_spectro_graphics_view)
-        self.graphics_view_layout2 = QHBoxLayout(self.orignal_spectro_graphics_view)
-        self.graphics_view_layout2.addWidget(self.orignal_spectro_plot_widget)
-        self.orignal_spectro_graphics_view.setLayout(self.graphics_view_layout2)
-        self.orignal_spectro_plot_widget.setObjectName("orignal_spectro_plot_widget")
-        self.orignal_spectro_plot_widget.setBackground((25, 35, 45))
-        self.orignal_spectro_plot_widget.showGrid(x=True, y=True)
-        self.orignal_spectro_plot_widget.setLabel("bottom", text = "Frequency (Hz)")
-        self.orignal_spectro_plot_widget.setLabel("left", text = "Amplitude (mV)")
-        self.orignal_spectro_plot_widget.setTitle("Spectrogram for Original Signal")
+        self.original_spectro_plot_widget = pg.PlotWidget(self.original_spectro_graphics_view)
+        self.graphics_view_layout2 = QHBoxLayout(self.original_spectro_graphics_view)
+        self.graphics_view_layout2.addWidget(self.original_spectro_plot_widget)
+        self.original_spectro_graphics_view.setLayout(self.graphics_view_layout2)
+        self.original_spectro_plot_widget.setObjectName("original_spectro_plot_widget")
+        self.original_spectro_plot_widget.setBackground((25, 35, 45))
+        self.original_spectro_plot_widget.showGrid(x=True, y=True)
+        self.original_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.original_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
+        self.original_spectro_plot_widget.setTitle("Spectrogram for Original Signal")
+
+        self.original_spectro_viewer = sv.SignalViewerLogic(self.original_spectro_plot_widget)
 
         self.frequency_plot_widget = pg.PlotWidget(self.frequency_graphics_view)
         self.graphics_view_layout3 = QHBoxLayout(self.frequency_graphics_view)
@@ -74,9 +83,11 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_widget.setObjectName("frequency_plot_widget")
         self.frequency_plot_widget.setBackground((25, 35, 45))
         self.frequency_plot_widget.showGrid(x=True, y=True)
-        self.frequency_plot_widget.setLabel("bottom", text = "Frequency (Hz)")
-        self.frequency_plot_widget.setLabel("left", text = "Amplitude (mV)")
+        self.frequency_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.frequency_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.frequency_plot_widget.setTitle("Frequency Signal")
+
+        self.frequency_signal_viewer = sv.SignalViewerLogic(self.frequency_plot_widget)
 
         self.equalized_spectro_plot_widget = pg.PlotWidget(self.equalized_spectro_graphics_view)
         self.graphics_view_mixer_layout = QHBoxLayout(self.equalized_spectro_graphics_view)
@@ -85,9 +96,11 @@ class MainApp(QMainWindow, ui):
         self.equalized_spectro_plot_widget.setObjectName("equalized_spectro_plot_widget")
         self.equalized_spectro_plot_widget.setBackground((25, 35, 45))
         self.equalized_spectro_plot_widget.showGrid(x=True, y=True)
-        self.equalized_spectro_plot_widget.setLabel("bottom", text = "Frequency (Hz)")
-        self.equalized_spectro_plot_widget.setLabel("left", text = "Amplitude (mV)")
+        self.equalized_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.equalized_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.equalized_spectro_plot_widget.setTitle("Spectrogram for Equalized Signal")
+
+        self.equalized_spectro_viewer = sv.SignalViewerLogic(self.equalized_spectro_plot_widget)
 
         self.show_hide_btn.clicked.connect(self.show_hide_spectro_widget)
 
@@ -96,6 +109,17 @@ class MainApp(QMainWindow, ui):
 
         self.mode_comboBox.currentTextChanged.connect(self.change_sliders_for_modes)
 
+        self.open_btn.clicked.connect(self.signal.import_signal("signal_files/musics.wav"))
+
+        self.play_pause_btn.clicked.connect(self.plot_signal)
+        self.stop_btn.clicked.connect()
+        self.replay_btn.clicked.connect()
+        self.reset_view_btn.clicked.connect()
+        self.zoom_in_btn.clicked.connect()
+        self.zoom_out_btn.clicked.connect()
+        self.speed_slider.valueChanged.connect()
+
+        self.window_comboBox.currentTextChanged.connect()
 
     def change_sliders_for_modes(self, text):
         if text == "Uniform Mode":
@@ -119,15 +143,14 @@ class MainApp(QMainWindow, ui):
             self.music_sliders_frame.setVisible(False)
             self.ecg_sliders_frame.setVisible(True)
 
-
     def show_hide_spectro_widget(self):
         if self._show_hide_flag:
-            self.orignal_spectro_frame.setVisible(False)
+            self.original_spectro_frame.setVisible(False)
             self.equalized_spectro_frame.setVisible(False)
             self.show_hide_btn.setIcon(QIcon('icons/eye-crossed copy.svg'))
             self._show_hide_flag = False
         else:
-            self.orignal_spectro_frame.setVisible(True)
+            self.original_spectro_frame.setVisible(True)
             self.equalized_spectro_frame.setVisible(True)
             self.show_hide_btn.setIcon(QIcon('icons/eye copy.svg'))
             self._show_hide_flag = True
@@ -137,6 +160,13 @@ class MainApp(QMainWindow, ui):
 
     def reset_slider_cursor(self, slider):
         slider.setCursor(Qt.OpenHandCursor)
+
+    def plot_signal(self):
+        self.original_signal_viewer.add_signal()
+        self.equalized_signal_viewer.add_signal()
+        self.frequency_signal_viewer.add_signal()
+        self.original_spectro_viewer.add_signal()
+        self.equalized_spectro_viewer.add_signal()
 
 
 def main():
@@ -150,50 +180,40 @@ def main():
 if __name__ == '__main__':
     main()
 
+# ----------------------------------- for loop for create sliders -----------------------------------
 
-
-
-
-
-
-
-
-
-
-#########################for loop for creat sliders#########################################################
-
- # # self.open_btn.clicked.connect(self.open_signal_file)
- #
- #        self.sliders_frame = self.findChild(QFrame, 'sliders_frame')
- #        self.slider_list = []
- #        self.add_sliders(5)
- #
- #
- #        self.slider_list[0].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[0]))
- #        self.slider_list[0].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[0]))
- #        self.slider_list[1].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[1]))
- #        self.slider_list[1].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[1]))
- #        self.slider_list[2].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[2]))
- #        self.slider_list[2].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[2]))
- #        self.slider_list[3].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[3]))
- #        self.slider_list[3].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[3]))
- #        self.slider_list[4].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[4]))
- #        self.slider_list[4].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[4]))
- #
- #
- #    def add_sliders(self,number_of_sliders):
- #        layout = QHBoxLayout(self.sliders_frame)
- #
- #        for i in range(number_of_sliders):
- #            # Create a slider
- #            slider = QSlider(Qt.Vertical, self)
- #            slider.setCursor(Qt.OpenHandCursor)
- #            slider.setObjectName(f'slider_{i}')
- #            self.slider_list.append(slider)
- #
- #
- #            # Add the slider to the layout
- #            layout.addWidget(slider)
- #
- #        # Set the layout for the sliders_frame
- #        self.sliders_frame.setLayout(layout)
+# # self.open_btn.clicked.connect(self.open_signal_file)
+#
+#        self.sliders_frame = self.findChild(QFrame, 'sliders_frame')
+#        self.slider_list = []
+#        self.add_sliders(5)
+#
+#
+#        self.slider_list[0].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[0]))
+#        self.slider_list[0].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[0]))
+#        self.slider_list[1].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[1]))
+#        self.slider_list[1].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[1]))
+#        self.slider_list[2].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[2]))
+#        self.slider_list[2].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[2]))
+#        self.slider_list[3].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[3]))
+#        self.slider_list[3].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[3]))
+#        self.slider_list[4].sliderPressed.connect(lambda: self.change_slider_cursor(self.slider_list[4]))
+#        self.slider_list[4].sliderReleased.connect(lambda: self.reset_slider_cursor(self.slider_list[4]))
+#
+#
+#    def add_sliders(self,number_of_sliders):
+#        layout = QHBoxLayout(self.sliders_frame)
+#
+#        for i in range(number_of_sliders):
+#            # Create a slider
+#            slider = QSlider(Qt.Vertical, self)
+#            slider.setCursor(Qt.OpenHandCursor)
+#            slider.setObjectName(f'slider_{i}')
+#            self.slider_list.append(slider)
+#
+#
+#            # Add the slider to the layout
+#            layout.addWidget(slider)
+#
+#        # Set the layout for the sliders_frame
+#        self.sliders_frame.setLayout(layout)

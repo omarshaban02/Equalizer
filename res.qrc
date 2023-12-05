@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/volume.svg</file>
+    <file>icons/volume-mute.svg</file>
+    <file>icons/volume-slash.svg</file>
     <file>icons/camera-viewfinder copy.svg</file>
     <file>icons/camera-viewfinder.svg</file>
     <file>icons/eye copy.svg</file>
@@ -300,6 +303,5 @@
     <file>icons/piano.png</file>
     <file>icons/trumpet.png</file>
     <file>icons/wolf.png</file>
-
   </qresource>
 </RCC>
