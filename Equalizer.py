@@ -9,25 +9,59 @@ import matplotlib.pyplot as plt
 import pyqtgraph as pg
 from threading import Thread
 from time import sleep
+
+class SignalSlice(object):
+    def __init__(self,name ,freqs_indices = None, time_range=None):
+        self._name = name
+        self._freqs_indices = freqs_indices
+        self._time_range = time_range
+    @property
+    def freqs_indices(self):
+        return self._freqs_indices
+    @freqs_indices.setter
+    def freqs_indices(self, value):
+        self._freqs_indices = value
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, value):
+        self._name = value
+    @property
+    def time_range(self):
+        return self._time_range
+    @time_range.setter
+    def time_range(self,value):
+        self._time_range = value
+    
+
 class Player(Thread):
-    def __init__(self, signal):
+    def __init__(self, signal, mode=None):
         Thread.__init__(self)
         self._signal = signal
         self._pyaudio = pyaudio.PyAudio()
         self._stream = None
         self._chunk = 1024
         self._is_playing = True
-        self._data = None
+        self._data = None 
         self._current_index = 0
-        if signal.mode == 'fft':
+        self._mode = mode
+        if mode is None:
+            self._mode = signal.mode
+        if self.mode == 'fft':
             self._data = np.array(signal.signal_ifft ,dtype=np.int16)
-        elif signal.mode == 'stft':
+        elif self.mode == 'stft':
             self._data = np.array(signal.signal_istft ,dtype=np.int16)
         else:
             raise ValueError('Invalid signal mode')
         
         self._current_bytes = None
-        
+    @property
+    def mode(self):
+        return self._mode
+    @mode.setter
+    def mode(self,value):
+        self._mode = value    
     @property
     def data(self):
         return self._data
@@ -81,9 +115,8 @@ class Player(Thread):
 
 
     def play(self):
+        self.stop()
         self.is_playing= True
-        if self.stream is not None:
-            self.stop()
         self.stream = self.pyaudio.open(format=self.pyaudio.get_format_from_width(self.signal.sample_width),
                                         channels=self.signal.nchannels,
                                         rate=self.signal.sampling_rate,
@@ -101,13 +134,18 @@ class Player(Thread):
         self.is_playing= False
 
     def replay(self):
-        if self.stream is not None:
-            self.stop()
+        self.stop()
+        self.play()
+
     def stop(self):
         self.pause()
-        self.stream.stop_stream()
-        self.stream.close()
-        self.pyaudio.terminate()
+        if self.stream is not None:
+            self.stream.stop_stream()
+            self.stream.close()
+            self.pyaudio.terminate()
+        self.pyaudio = pyaudio.PyAudio()
+        self.stream = None
+        self.current_index = 0
         
 
     def advance(self):
@@ -148,7 +186,7 @@ class Signal(object):
         self._signal_sound = None 
         self._stream = None 
         self._signal_spectrogram = None
-        self._components_data = None
+        self._signal_slices = None
         self.original_signal_frequency_plot = None
         self.original_signal_plot = None
         self.equalized_signal_plot = None
@@ -236,12 +274,12 @@ class Signal(object):
        return self._signal_spectrogram
 
     @property
-    def components_data(self):
-        return self._components_data
+    def signal_slices(self):
+        return self._signal_slices
     
-    @components_data.setter
-    def components_data(self, value):
-        self._components_data = value
+    @signal_slices.setter
+    def signal_slices(self, value):
+        self._signal_slices = value
 
     @property
     def nchannels(self):
@@ -291,10 +329,10 @@ class Signal(object):
     def equalize(self, window_type, equalizing_factor,freqs_range = None, slice_name = None):
         # apply stft
         if slice_name is not None:
-            for slice in self.components_data:
-                if slice[0] == slice_name:
-                    freqs_indices = slice[1]
-                    time_range = slice[2]
+            for slice in self.signal_slices:
+                if slice.name == slice_name:
+                    freqs_indices = slice.freqs_indices
+                    time_range = slice.time_range
                     window = 0
                     window_length = len(freqs_indices)
                     if window_type == 'hamming':
@@ -311,8 +349,8 @@ class Signal(object):
                     n_start = int(time_range[0]* self.n_time_segments/self.duration)
                     n_end = int(time_range[1]* self.n_time_segments/self.duration)
                     if n_end < 0 : n_end = -1
-                    for i in freqs_indices:
-                        self.signal_zxx[i, n_start:n_end] *= window[i]
+                    for i,w in zip(freqs_indices,window):
+                        self.signal_zxx[i, n_start:n_end] *= w
         # apply fft
         if freqs_range is not None:
             f_start = freqs_range[0]
@@ -341,11 +379,20 @@ class Signal(object):
             f_end = -temp_f_start
             k_start = int(self.number_of_samples - (-f_start / self.sampling_rate) * self.number_of_samples)
             k_end = int(self.number_of_samples - (-f_end / self.sampling_rate) * self.number_of_samples)
+            window_length = k_end - k_start
+            window = 0
+            if window_type == 'hamming':
+                window = windows.hamming(window_length) * equalizing_factor
+            elif window_type == 'hanning':
+                window = windows.hann(window_length) * equalizing_factor
+            elif window_type == 'gussian':
+                window = windows.gaussian(window_length) * equalizing_factor
+            elif window_type == 'rectangle':
+                window =  equalizing_factor
+            else:
+                raise ValueError('Unknown window')
             self.signal_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
 
-    def import_signal(self):
-        pass
-    
     def open(self,file,mode= 'fft'):
         file = wave.open(file, "rb")
         nframes = file.getnframes()
@@ -353,7 +400,7 @@ class Signal(object):
         self.original_signal = np.frombuffer(data, dtype=np.int16)
         self.sampling_rate = file.getframerate()
         self.sample_width = file.getsampwidth()
-        
+        self.nchannels = file.getnchannels()
         if mode == 'fft':
             self.mode = 'fft'
             sig_fft = fft(self.original_signal)
@@ -371,15 +418,47 @@ class Signal(object):
             
         else:
             raise ValueError('Invalid mode')
+    def export(self, filename, mode=None):
+        if mode is None:
+            mode = self.mode
+        data = None
+        modified_channels = None
+        if mode == 'fft':
+            data = np.array(self.signal_ifft,dtype=np.int16)
+        if mode == 'stft':
+            data = np.array(self.signal_istft,dtype=np.int16)
+        if self.nchannels > 1:
+            modified_channels = np.array(np.split(data,self.nchannels,axis=0),dtype=np.int16)
+        bitrate = 16
+        with wave.open(f"{filename}.wav", "wb") as out_file:
+            out_file.setframerate(self.sampling_rate)
+            out_file.setnchannels(self.nchannels)
+            out_file.setsampwidth(bitrate // 8)
+            if modified_channels is not None:
+                for channel in modified_channels:
+                    out_file.writeframes(channel.tobytes())
+            else:
+                out_file.writeframes(data.tobytes())
+
         
-            
+slices =[]
+slices.append(SignalSlice('elephant',[3,4,*[i for i in range(6,21)]], [5,-1]))
+slices.append(SignalSlice('wolf',[4,5,8,10,11,2,3], [3,6]))
+slices.append(SignalSlice('horse',[i for i in range(4,18)], [2,3.5]))
+slices.append(SignalSlice('horse',[i for i in range(4,18)], [6,7]))
+slices.append(SignalSlice('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]))
+slices.append(SignalSlice('cow',[i for i in range(0,25)], [0,1]))
+slices.append(SignalSlice('birds',[i for i in range(0,30)], [1,2.5]))
+
+
 sig = Signal()
 sig.open(r"signal_files/animals.wav", mode='stft')
-p = Player(sig)
-p.start()
-sleep(1)
-p.pause()
-sleep(1)
-p.resume()
-p.join()
+sig.signal_slices = slices
+sig.equalize('hamming',0,freqs_range=(0,20000))
+sig.export('test', mode='fft')
+# p = Player(sig, mode='fft')
+# p.start()
+# sleep(10)
+# p.play()
+# p.join()
         
