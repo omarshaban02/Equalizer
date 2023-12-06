@@ -183,16 +183,9 @@ class Signal(object):
         self._duration = None
         self._number_of_samples = None
         self._sample_width = None
-        self._signal_sound = None 
-        self._stream = None 
         self._signal_spectrogram = None
         self._signal_slices = None
-        self.original_signal_frequency_plot = None
-        self.original_signal_plot = None
-        self.equalized_signal_plot = None
-        self.original_signal_spectrogram = None
-        self.equalized_signal_spectrogram = None
-
+        
     @property
     def original_signal(self):
         return self._original_signal
@@ -269,7 +262,7 @@ class Signal(object):
         self._signal_phases = value
 
     @property
-    def spectrogram(self):
+    def signal_spectrogram(self):
        self._signal_spectrogram = spectrogram(self.signal_ifft,fs = self.sampling_rate)
        return self._signal_spectrogram
 
