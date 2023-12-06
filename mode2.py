@@ -21,7 +21,9 @@ stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
                 output=True)
 # read data
 data = f.readframes(chunk)
+
 sound = np.frombuffer(data, dtype=np.int16)
+
 SAMPLING_RATE = f.getframerate()
 # play stream
 while data:

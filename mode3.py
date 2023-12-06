@@ -24,9 +24,11 @@ data = f.readframes(chunk)
 nchannels = f.getnchannels()
 sound = np.frombuffer(data, dtype=np.int16)
 SAMPLING_RATE = f.getframerate()
+N = f.getnframes()
+duration = N / SAMPLING_RATE
 # play stream
 while data:
-    # stream.write(data)
+    stream.write(data)
     data = f.readframes(chunk)
     sound = np.append(sound, np.frombuffer(data, dtype=np.int16))
 
@@ -41,29 +43,28 @@ p.terminate()
 
 ###################################################### editing sound  ################################
 
-N = int(sound.shape[0] / 2)  # per channel
 
-duration = N / SAMPLING_RATE
+
 t = np.linspace(0, duration, N, endpoint=False)
-# # show signal in time domain
-# plt.figure(figsize=(8, 6))
-# plt.plot(t, sound)
-# #plt.show()
-# # convert the signal to frequency domain
-# sound_fft = fft(sound)
+    # # show signal in time domain
+    # plt.figure(figsize=(8, 6))
+    # plt.plot(t, sound)
+    # #plt.show()
+    # # convert the signal to frequency domain
+    # sound_fft = fft(sound)
 
-# fft_length = len(sound_fft)
-# sound_frequencies = fftfreq(fft_length, 1 / SAMPLING_RATE)
-# sound_amplitudes = np.abs(sound_fft)
-# sound_phases = np.angle(sound_fft)
-# # show the amplitude spectrum
-# plt.figure(figsize=(8, 6))
-# plt.plot(sound_frequencies, 20 * np.log10(sound_amplitudes))
-# #plt.show()
-# # show the spectrogram to analyze the sound and see how frequencies and amplitudes change over time
-# # zxx is the square magnitude of STFT (Short-Time Fourier Transform)
-# f_spectro, t_spectro, zxx = spectrogram(sound, fs=SAMPLING_RATE)
-# # use gouraud shading to smooth the colors of the spectrogram
+    # fft_length = len(sound_fft)
+    # sound_frequencies = fftfreq(fft_length, 1 / SAMPLING_RATE)
+    # sound_amplitudes = np.abs(sound_fft)
+    # sound_phases = np.angle(sound_fft)
+    # # show the amplitude spectrum
+    # plt.figure(figsize=(8, 6))
+    # plt.plot(sound_frequencies, 20 * np.log10(sound_amplitudes))
+    # #plt.show()
+    # # show the spectrogram to analyze the sound and see how frequencies and amplitudes change over time
+    # # zxx is the square magnitude of STFT (Short-Time Fourier Transform)
+    # f_spectro, t_spectro, zxx = spectrogram(sound, fs=SAMPLING_RATE)
+    # # use gouraud shading to smooth the colors of the spectrogram
 
 # plt.pcolormesh(t_spectro, f_spectro[:20], zxx[:20,:], shading='gouraud')
 # plt.xlabel('Time (Seconds)')
@@ -91,10 +92,10 @@ for animal_tuple in freq_components:
     for i in animal_tuple[1]:
         sxx[i, n_start:n_end] = 0
 print(freqs)
-
-_, modified_sound = istft(sxx, fs=SAMPLING_RATE)
-
-modified_channels = np.array(np.split(modified_sound, nchannels, axis=0), dtype=np.int16)
+    
+_, modified_sound= istft(sxx, fs=SAMPLING_RATE)
+  
+modified_channels = np.array(np.split(modified_sound,nchannels,axis=0),dtype=np.int16)
 ############################### remove wolf sound #############################
 # for poistive part
 # f_start = 320
@@ -141,3 +142,4 @@ with wave.open("output_music_mode.wav", "wb") as out_file:
     out_file.setsampwidth(bitrate // 8)
     for channel in modified_channels:
         out_file.writeframes(channel.tobytes())
+     
