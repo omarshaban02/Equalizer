@@ -78,7 +78,7 @@ freqs, times, sxx = stft(sound, fs=SAMPLING_RATE)
 freq_components = [
     # ('flute', [i for i in range(1, 4)], [1, 3.5]),
     # ('flute', [i for i in range(1, 4)], [4, 7]),
-    ('guitar', [i for i in range(1, 4)], [7, 9]),
+    ('guitar', [i for i in range(1, 4)], [7.5, 9]),
     # ('piano', [i for i in range(0, 9)], [0, 4.5]),
     # ('piano', [0, 3, 5, 6, 7, 8, 9], [0, 4.5]),
     # ('trumpet', [i for i in range(4, 18)], [5.5, 7.5]),
