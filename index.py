@@ -75,6 +75,9 @@ class MainApp(QMainWindow, ui):
         self.original_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.original_spectro_plot_widget.setTitle("Spectrogram for Original Signal")
 
+        self.original_spectro_plot_item = pg.ImageItem()
+        self.original_spectro_plot_item.setLookupTable(pg.colormap.get("viridis"))
+
         # frequency plot
         self.frequency_plot_widget = pg.PlotWidget(self.frequency_graphics_view)
         self.graphics_view_layout3 = QHBoxLayout(self.frequency_graphics_view)
@@ -98,6 +101,9 @@ class MainApp(QMainWindow, ui):
         self.equalized_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.equalized_spectro_plot_widget.setTitle("Spectrogram for Equalized Signal")
 
+        self.equalized_spectro_plot_item = pg.ImageItem()
+        self.equalized_spectro_plot_item.setLookupTable(pg.colormap.get("viridis"))
+
         # ------------------------------- signals and slots --------------------------------------
         self.show_hide_btn.clicked.connect(self.show_hide_spectro_widget)
 
@@ -115,7 +121,7 @@ class MainApp(QMainWindow, ui):
         # self.zoom_in_btn.clicked.connect()
         # self.zoom_out_btn.clicked.connect()
         # self.speed_slider.valueChanged.connect()
-        #
+
         # self.window_comboBox.currentTextChanged.connect()
 
     def open_signal(self):
@@ -124,11 +130,20 @@ class MainApp(QMainWindow, ui):
                                                    'wav Files (*.wav)', options=options)
         self.signal.import_signal(file_name, "stft")
 
+        self.original_signal_viewer.clear()
+        self.equalized_signal_viewer.clear()
+
         self.original_signal_viewer.load_dataset(self.signal)
         self.equalized_signal_viewer.load_dataset(self.signal)
         self.original_signal_viewer.add_signal()
         self.equalized_signal_viewer.add_signal()
 
+        self.original_spectro_plot_item.setImage(self.signal.original_signal_spectrogram)
+        self.original_spectro_plot_widget.setLimits(yMax=self.original_spectro_plot_item.width(), xMax=self.original_spectro_plot_item.height(), yMin=0, xMin=0)
+        self.original_spectro_plot_widget.addItem(self.original_spectro_plot_item)
+
+        self.equalized_spectro_plot_item.setImage(self.signal.equalized_signal_spectrogram)
+        self.equalized_spectro_plot_widget.addItem(self.equalized_spectro_plot_item)
 
     def change_sliders_for_modes(self, text):
         if text == "Uniform Mode":

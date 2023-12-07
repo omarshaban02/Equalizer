@@ -287,12 +287,12 @@ class Signal(object):
 
     @property
     def original_signal_spectrogram(self):
-        self._original_signal_spectrogram = spectrogram(self.original_signal, fs=self.sampling_rate)
+        _, _, self._original_signal_spectrogram = spectrogram(self.original_signal, fs=self.sampling_rate)
         return self._original_signal_spectrogram
 
     @property
     def equalized_signal_spectrogram(self):
-        self._equalized_signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
+        _, _, self._equalized_signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
         return self._equalized_signal_spectrogram
 
     @property
