@@ -1,19 +1,14 @@
-from re import T
 from turtle import color
 from PyQt5.QtCore import QTimer
 import pandas as pd
 import pyqtgraph as pg
 import random
 import pyqtgraph.exporters
-import copy
 import aspose.pdf as ap
-import numpy as np
-
-PATH = 'signals/mitbih_train.csv'
 
 
-class Signal(object):
-    def __init__(self, data: list = [], title: str = '', color: tuple = (0, 0, 0)) -> None:
+class PlotSignal(object):
+    def __init__(self, data: list = [], color: tuple = (0, 0, 0)) -> None:
         self.completed = False
         self.plotted_data = []
         self.data = data
@@ -23,9 +18,7 @@ class Signal(object):
         self.is_active = False
         self.plot_data_item = pg.PlotDataItem()
         self._color = color
-        self._title = None
         self._on_click_event_handler = lambda e: None
-        self.plot_data_item.setCurveClickable(state=True, width=6)  # Width is Tolerance
         self.bounds_paddings = [0.5, 10, 0.5, 5]  # top, right, bottom, left
         self._bounds = []  # top, right, bottom, left
         self.samples_number = len(self.data)
@@ -42,36 +35,6 @@ class Signal(object):
     @bounds.setter
     def bounds(self, value):
         raise ValueError('this property is read only')
-
-    @property
-    def on_click_event_handler(self):
-        return self._on_click_event_handler
-
-    @on_click_event_handler.setter
-    def on_click_event_handler(self, func):
-        self._on_click_event_handler = func
-        self.plot_data_item.sigClicked.connect(self._on_click_event_handler)
-
-    @property
-    def title(self):
-        return self._title
-
-    @property
-    def color(self):
-        return self._color
-
-    @color.setter
-    def color(self, value):
-        self._color = value
-        pen = pg.mkPen(self.color, width=2)
-        self.plot_data_item.setPen(pen)
-
-    @title.setter
-    def title(self, value: pg.TextItem):
-        self._title = value
-
-    def setTitleColor(self, color: tuple) -> None:
-        self.title.setColor(color)
 
     # update current sample, plot data and current sample index.
     def advance(self):
@@ -109,8 +72,8 @@ class SignalViewerLogic(object):
         self.view = view
         self.timer = QTimer()
         self.timer.timeout.connect(self.draw)
-        self.signal: Signal = None  # storing loaded signals from the file
-        self.plotted_signals: list(Signal) = []  # storing all signals in the view
+        self.signal: PlotSignal = None  # storing loaded signals from the file
+        self.plotted_signals: list(PlotSignal) = []  # storing all signals in the view
         self._rate = 20  # samples per second
         self.timer.start(int(1000 / self._rate))  # The delay that the draw method takes for each call
         self.view_width = 50  # initial width
@@ -121,109 +84,15 @@ class SignalViewerLogic(object):
         self._display_grid = True
         self.view.setXRange(self._xRange[0], self._xRange[1], padding=0)
         self.view.setYRange(self._yRange[0], self._yRange[1], padding=0)
-        self.view.scene().sigMouseClicked.connect(self.ignore_focus)
         self.display_grid = True
         self.display_axis = True
         self._apply_limits = True
-        self._background_color = (255, 255, 255)
+        self._background_color = (25, 35, 45)
         self.background_color = self._background_color
         self._display_axis_labels = True
         self.display_axis_labels = True
-        self._xScrollBar = None
-        self._yScrollBar = None
         self.view_limits = []
         self.apply_limits = True
-        self.xScrollBar_event = lambda: self.view.setXRange(self.xScrollBar.value(),
-                                                            self.xScrollBar.value() + self.xRange[1] - self.xRange[0],
-                                                            padding=0)
-        self.yScrollBar_event = lambda: self.view.setYRange(self.yScrollBar.value(),
-                                                            self.yScrollBar.value() + self.yRange[1] - self.yRange[0],
-                                                            padding=0)
-        self.view.sigRangeChanged.connect(self._update_scrollBar)
-        self._xScrollBar_active = False
-        self._yScrollBar_active = False
-
-    def set_xScrollBar_active(self, value):
-        self._xScrollBar_active = value
-
-    def set_yScrollBar_active(self, value):
-        self._yScrollBar_active = value
-
-    def ignore_focus(self, e):
-        if e.double() == True:
-            for signal in self.plotted_signals:
-                signal.is_active = False
-                pen = pg.mkPen(signal.color, width=2)
-                signal.plot_data_item.setPen(pen)
-
-    def _update_scrollBar(self):
-        if not (self.xScrollBar is None or self._xScrollBar_active):
-            if self.apply_limits:
-                self.xScrollBar.setMaximum(int(self.view_limits[1]))
-                self.xScrollBar.setMinimum(int(self.view_limits[3]))
-            # update the extreme values of the scrollbar
-            xMin = int(self.xRange[0])
-            xMax = int(self.xRange[1])
-            if self.xScrollBar.maximum() < xMax:
-                self.xScrollBar.setMaximum(xMax)
-            if self.xScrollBar.minimum() > xMin:
-                self.xScrollBar.setMinimum(xMin)
-            self.xScrollBar.setValue(xMin)
-
-        if not (self.yScrollBar is None or self._yScrollBar_active):
-            if self.apply_limits:
-                self.yScrollBar.setMaximum(int(self.view_limits[0]))
-                self.yScrollBar.setMinimum(int(self.view_limits[2]))
-            # update the extreme values of the scrollbar 
-            yMin = int(self.yRange[0])
-            yMax = int(self.yRange[1])
-            if self.yScrollBar.maximum() < yMax:
-                self.yScrollBar.setMaximum(yMax)
-            if self.yScrollBar.minimum() > yMin:
-                self.yScrollBar.setMinimum(yMin)
-            self.yScrollBar.setValue(yMin)
-
-    @property
-    def xScrollBar(self):
-        return self._xScrollBar
-
-    @xScrollBar.setter
-    def xScrollBar(self, value):
-        self._xScrollBar = value
-        self.xScrollBar.setValue(0)
-        self.xScrollBar.setMinimum(0)
-        self.xScrollBar.setMaximum(180)
-        self.xScrollBar.sliderReleased.connect(lambda: self.set_xScrollBar_active(False))
-        self.xScrollBar.sliderPressed.connect(lambda: self.set_xScrollBar_active(True))
-        self.xScrollBar.valueChanged.connect(self.xScrollBar_event)
-
-    @property
-    def yScrollBar(self):
-        return self._yScrollBar
-
-    @yScrollBar.setter
-    def yScrollBar(self, value):
-        self._yScrollBar = value
-        self.yScrollBar.setValue(0)
-        self.yScrollBar.setMinimum(0)
-        self.yScrollBar.setMaximum(1)
-        self.yScrollBar.sliderReleased.connect(lambda: self.set_yScrollBar_active(False))
-        self.yScrollBar.sliderPressed.connect(lambda: self.set_yScrollBar_active(True))
-        self.yScrollBar.valueChanged.connect(self.yScrollBar_event)
-
-    @property
-    def display_axis_labels(self):
-        return self._display_axis_labels
-
-    @display_axis_labels.setter
-    def display_axis_labels(self, value):
-        self._display_axis_labels = value
-        if self._display_axis_labels:
-            self.view.setLabel('bottom', text='Frequency (Hz)')
-            self.view.setLabel('left', text='Amplitude (mV)')
-        else:
-            self.view.setLabel('bottom', text=None)
-            self.view.setLabel('left', text=None)
 
     @property
     def background_color(self):
@@ -324,7 +193,7 @@ class SignalViewerLogic(object):
             signals = pd.read_csv(filename).head(loaded_signals).to_numpy()
 
         for s in signals:
-            sig = Signal(data=s)
+            sig = PlotSignal(data=s)
             self.signals.append(sig)
 
     # deprecated methods
@@ -374,7 +243,7 @@ class SignalViewerLogic(object):
         self.signal.restart()
 
     # apply the action on the active signals
-    def set_signal_title(self, signal: Signal, text: str):
+    def set_signal_title(self, signal: PlotSignal, text: str):
         pos_x = int(random.random() * 100)
         pos_y = signal.data[pos_x]
         title = pg.TextItem(text=text, color=signal.color)
@@ -471,7 +340,6 @@ class SignalViewerLogic(object):
     def add_signal(self, color=(255, 255, 255)):
         self.signal.is_active = True
         self.signal.color = color
-        self.signal.on_click_event_handler = lambda e: self.signal_onclick(e)
         pen = pg.mkPen(self.signal.color, width=3)
         self.signal.plot_data_item.setPen(pen)
         self.view.addItem(self.signal.plot_data_item)
