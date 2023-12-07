@@ -28,9 +28,6 @@ class Signal(object):
         self.plot_data_item.setCurveClickable(state=True, width=6)  # Width is Tolerance
         self.bounds_paddings = [0.5, 10, 0.5, 5]  # top, right, bottom, left
         self._bounds = []  # top, right, bottom, left
-        self.mean = np.mean(self.data).round(9)
-        self.variance = np.var(self.data).round(9)
-        self.std = np.std(self.data).round(9)
         self.samples_number = len(self.data)
 
     @property
@@ -112,9 +109,8 @@ class SignalViewerLogic(object):
         self.view = view
         self.timer = QTimer()
         self.timer.timeout.connect(self.draw)
-        self.signals: list(Signal) = []  # storing loaded signals from the file
+        self.signal: Signal = None  # storing loaded signals from the file
         self.plotted_signals: list(Signal) = []  # storing all signals in the view
-        self._active_signals: list(Signal) = []  # storing the active signals e.g. clicked signals
         self._rate = 20  # samples per second
         self.timer.start(int(1000 / self._rate))  # The delay that the draw method takes for each call
         self.view_width = 50  # initial width
@@ -297,13 +293,7 @@ class SignalViewerLogic(object):
         duration = 1000 / self._rate
         self.timer.start(int(duration))
 
-    @property
-    def active_signals(self):
-        self._active_signals = []
-        for signal in self.plotted_signals:
-            if signal.is_active:
-                self._active_signals.append(signal)
-        return self._active_signals
+
 
     @property
     def yRange(self) -> list:
@@ -373,21 +363,15 @@ class SignalViewerLogic(object):
 
     # apply the action on the active signals
     def play(self):
-        signals = self.active_signals
-        for signal in signals:
-            signal.resume()
+        self.signal.resume()
 
     # apply the action on the active signals
     def pause(self):
-        signals = self.active_signals
-        for signal in signals:
-            signal.pause()
+        self.signal.pause()
 
     # apply the action on the active signals
     def replay(self):
-        signals = self.active_signals
-        for signal in signals:
-            signal.restart()
+        self.signal.restart()
 
     # apply the action on the active signals
     def set_signal_title(self, signal: Signal, text: str):
@@ -475,83 +459,32 @@ class SignalViewerLogic(object):
     # draw active signals
     # this method is called by the rate specified above, default is 20 times per second
     def draw(self):
-        for signal in self.plotted_signals:
-            if not (signal.stop_drawing or signal.completed):
-                if signal.current_sample_index > self.xRange[1]:
-                    self.horizontal_shift(1)
-                signal.advance()
-                signal.plot()
+        if not (self.signal.stop_drawing or self.signal.completed):
+            if self.signal.current_sample_index > self.xRange[1]:
+                self.horizontal_shift(1)
+            self.signal.advance()
+            self.signal.plot()
 
-                if signal.title in self.view.allChildItems():
-                    self.view.removeItem(signal.title)
-            else:
-                if signal.title not in self.view.allChildItems():
-                    self.view.addItem(signal.title)
 
-    def signal_onclick(self, e):
-        signal = None
-        for s in self.plotted_signals:
-            if id(e) == id(s.plot_data_item):
-                signal = s
-                break
-        if signal is not None:
-            if signal.is_active:
-                signal.is_active = False
-                pen = pg.mkPen(signal.color, width=2)
-                e.setPen(pen)
-            else:
-                signal.is_active = True
-                pen = pg.mkPen(signal.color, width=3)
-                e.setPen(pen)
 
     # add signal to the plotted signal and active signals and start drawing it
     def add_signal(self, color=(255, 255, 255)):
-        signal.is_active = True
-        signal.color = color
-        signal.on_click_event_handler = lambda e: self.signal_onclick(e)
-        self.plotted_signals.append(signal)
-        pen = pg.mkPen(signal.color, width=3)
-        signal.plot_data_item.setPen(pen)
-        self.view.addItem(signal.plot_data_item)
+        self.signal.is_active = True
+        self.signal.color = color
+        self.signal.on_click_event_handler = lambda e: self.signal_onclick(e)
+        pen = pg.mkPen(self.signal.color, width=3)
+        self.signal.plot_data_item.setPen(pen)
+        self.view.addItem(self.signal.plot_data_item)
         # related to view limits if it is enabled
         #  update them so that the limits are applicable on the new signal
         if self.apply_limits == True:
             self.apply_limits = True
 
     # apply the action on the active signals
-    # clear the active signals
-    def remove(self):
-        for signal in self.active_signals:
-            self.view.removeItem(signal.plot_data_item)
-            if signal.title in self.view.allchildItems():
-                self.view.removeItem(signal.title)
-            self.plotted_signals.remove(signal)
 
     # clear the screen
     def clear(self):
-        self.plotted_signals = []
-
-    def moveTo(self, other):
-        for signal in self.active_signals:
-            signal_index = self.signals.index(signal)
-            other.signals.insert(signal_index, self.signals.pop(signal_index))
-            self.plotted_signals.pop(self.plotted_signals.index(signal))
-            self.view.removeItem(signal.title)
-            self.view.removeItem(signal.plot_data_item)
-            if signal not in other.plotted_signals:
-                other.add_signal(other.signals.index(signal), str(signal.title.toPlainText()), signal.color)
-
-    def hide_signal(self):
-        for signal in self.active_signals:
-            self.view.removeItem(signal.plot_data_item)
-
-    def show_hidden_signal(self):
-        for signal in self.active_signals:
-            self.view.addItem(signal.plot_data_item)
-
-    def clear(self):
-        self.signals = []
-        self.plotted_signals = []
+        self.signal = None
         self.view.clear()
 
     def linkTo(self, other: pg.PlotWidget):

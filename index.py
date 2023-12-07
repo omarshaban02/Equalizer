@@ -109,17 +109,23 @@ class MainApp(QMainWindow, ui):
 
         self.mode_comboBox.currentTextChanged.connect(self.change_sliders_for_modes)
 
-        self.open_btn.clicked.connect()
+        self.open_btn.clicked.connect(self.open_signal)
 
-        self.play_pause_btn.clicked.connect(self.plot_signal)
-        self.stop_btn.clicked.connect()
-        self.replay_btn.clicked.connect()
-        self.reset_view_btn.clicked.connect()
-        self.zoom_in_btn.clicked.connect()
-        self.zoom_out_btn.clicked.connect()
-        self.speed_slider.valueChanged.connect()
+        # self.play_pause_btn.clicked.connect()
+        # self.stop_btn.clicked.connect()
+        # self.replay_btn.clicked.connect()
+        # self.reset_view_btn.clicked.connect()
+        # self.zoom_in_btn.clicked.connect()
+        # self.zoom_out_btn.clicked.connect()
+        # self.speed_slider.valueChanged.connect()
+        #
+        # self.window_comboBox.currentTextChanged.connect()
 
-        self.window_comboBox.currentTextChanged.connect()
+    def open_signal(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
+                                                   'wav Files (*.wav)', options=options)
+        self.signal.import_signal(file_name, "stft")
 
     def change_sliders_for_modes(self, text):
         if text == "Uniform Mode":
@@ -160,13 +166,6 @@ class MainApp(QMainWindow, ui):
 
     def reset_slider_cursor(self, slider):
         slider.setCursor(Qt.OpenHandCursor)
-
-    def plot_signal(self):
-        self.original_signal_viewer.add_signal()
-        self.equalized_signal_viewer.add_signal()
-        self.frequency_signal_viewer.add_signal()
-        self.original_spectro_viewer.add_signal()
-        self.equalized_spectro_viewer.add_signal()
 
 
 def main():
