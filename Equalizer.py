@@ -419,7 +419,7 @@ class Signal(object):
                 raise ValueError('Unknown window')
             self.signal_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
 
-    def open(self, file, mode='fft'):
+    def import_signal(self, file, mode='fft'):
         file = wave.open(file, "rb")
         nframes = file.getnframes()
         data = file.readframes(nframes)
@@ -478,7 +478,7 @@ slices.append(SignalSlice('cow', [i for i in range(0, 25)], [0, 1]))
 slices.append(SignalSlice('birds', [i for i in range(0, 30)], [1, 2.5]))
 
 sig = Signal()
-sig.open(r"signal_files/animals.wav", mode='stft')
+sig.import_signal(r"signal_files/animals.wav", mode='stft')
 sig.signal_slices = slices
 sig.equalize('hamming', 0, freqs_range=(0, 20000))
 sig.export('test', mode='fft')

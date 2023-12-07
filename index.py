@@ -109,7 +109,7 @@ class MainApp(QMainWindow, ui):
 
         self.mode_comboBox.currentTextChanged.connect(self.change_sliders_for_modes)
 
-        self.open_btn.clicked.connect(self.signal.import_signal("signal_files/musics.wav"))
+        self.open_btn.clicked.connect()
 
         self.play_pause_btn.clicked.connect(self.plot_signal)
         self.stop_btn.clicked.connect()
