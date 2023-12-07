@@ -70,11 +70,10 @@ class MainApp(QMainWindow, ui):
         self.graphics_view_layout2.addWidget(self.original_spectro_plot_widget)
         self.original_spectro_graphics_view.setLayout(self.graphics_view_layout2)
         self.original_spectro_plot_widget.setObjectName("original_spectro_plot_widget")
-
-        self.original_spectro_viewer = sv.SignalViewerLogic(self.original_spectro_plot_widget)
-        self.original_spectro_viewer.view.setLabel("bottom", text="Frequency (Hz)")
-        self.original_spectro_viewer.view.setLabel("left", text="Amplitude (mV)")
-        self.original_spectro_viewer.view.setTitle("Spectrogram for Original Signal")
+        self.original_spectro_plot_widget.setBackground((25, 35, 45))
+        self.original_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.original_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
+        self.original_spectro_plot_widget.setTitle("Spectrogram for Original Signal")
 
         # frequency plot
         self.frequency_plot_widget = pg.PlotWidget(self.frequency_graphics_view)
@@ -82,11 +81,11 @@ class MainApp(QMainWindow, ui):
         self.graphics_view_layout3.addWidget(self.frequency_plot_widget)
         self.frequency_graphics_view.setLayout(self.graphics_view_layout3)
         self.frequency_plot_widget.setObjectName("frequency_plot_widget")
-
-        self.frequency_signal_viewer = sv.SignalViewerLogic(self.frequency_plot_widget)
-        self.frequency_signal_viewer.view.setLabel("bottom", text="Frequency (Hz)")
-        self.frequency_signal_viewer.view.setLabel("left", text="Amplitude (mV)")
-        self.frequency_signal_viewer.view.setTitle("Frequency Signal")
+        self.frequency_plot_widget.showGrid(x=True, y=True)
+        self.frequency_plot_widget.setBackground((25, 35, 45))
+        self.frequency_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.frequency_plot_widget.setLabel("left", text="Amplitude (mV)")
+        self.frequency_plot_widget.setTitle("Frequency Signal")
 
         # equalized signal spectrogram
         self.equalized_spectro_plot_widget = pg.PlotWidget(self.equalized_spectro_graphics_view)
@@ -94,11 +93,10 @@ class MainApp(QMainWindow, ui):
         self.graphics_view_mixer_layout.addWidget(self.equalized_spectro_plot_widget)
         self.equalized_spectro_graphics_view.setLayout(self.graphics_view_mixer_layout)
         self.equalized_spectro_plot_widget.setObjectName("equalized_spectro_plot_widget")
-
-        self.equalized_spectro_viewer = sv.SignalViewerLogic(self.equalized_spectro_plot_widget)
-        self.equalized_spectro_viewer.view.setLabel("bottom", text="Frequency (Hz)")
-        self.equalized_spectro_viewer.view.setLabel("left", text="Amplitude (mV)")
-        self.equalized_spectro_viewer.view.setTitle("Spectrogram for Equalized Signal")
+        self.equalized_spectro_plot_widget.setBackground((25, 35, 45))
+        self.equalized_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
+        self.equalized_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
+        self.equalized_spectro_plot_widget.setTitle("Spectrogram for Equalized Signal")
 
         # ------------------------------- signals and slots --------------------------------------
         self.show_hide_btn.clicked.connect(self.show_hide_spectro_widget)
@@ -125,8 +123,12 @@ class MainApp(QMainWindow, ui):
         file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
                                                    'wav Files (*.wav)', options=options)
         self.signal.import_signal(file_name, "stft")
+
+        self.original_signal_viewer.load_dataset(self.signal)
+        self.equalized_signal_viewer.load_dataset(self.signal)
         self.original_signal_viewer.add_signal()
         self.equalized_signal_viewer.add_signal()
+
 
     def change_sliders_for_modes(self, text):
         if text == "Uniform Mode":

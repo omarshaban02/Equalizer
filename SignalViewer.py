@@ -1,14 +1,14 @@
 from turtle import color
 from PyQt5.QtCore import QTimer
-import pandas as pd
+import numpy as np
 import pyqtgraph as pg
 import random
 import pyqtgraph.exporters
 import aspose.pdf as ap
-
+from Equalizer import Signal
 
 class PlotSignal(object):
-    def __init__(self, data: list = [], color: tuple = (0, 0, 0)) -> None:
+    def __init__(self, data: list = [], color: tuple = (255, 255, 255)) -> None:
         self.completed = False
         self.plotted_data = []
         self.data = data
@@ -26,9 +26,9 @@ class PlotSignal(object):
     @property
     def bounds(self):
         self._bounds = []
-        self._bounds.append(max(self.data) + self.bounds_paddings[0])
+        self._bounds.append(3e4 + self.bounds_paddings[0])
         self._bounds.append(len(self.data) + self.bounds_paddings[1])
-        self._bounds.append(min(self.data) - self.bounds_paddings[2])
+        self._bounds.append(-3e4 - self.bounds_paddings[2])
         self._bounds.append(0 - self.bounds_paddings[3])
         return self._bounds
 
@@ -46,7 +46,6 @@ class PlotSignal(object):
                 self.completed = True
                 self.stop_drawing = True
                 self.is_active = False
-                self.color = self.color  # when signal is completed, I make it unactivated So, I update the pen (color, width)
 
     def pause(self) -> None:
         self.stop_drawing = True
@@ -72,14 +71,13 @@ class SignalViewerLogic(object):
         self.view = view
         self.timer = QTimer()
         self.timer.timeout.connect(self.draw)
-        self.signal: PlotSignal = None  # storing loaded signals from the file
-        self.plotted_signals: list(PlotSignal) = []  # storing all signals in the view
-        self._rate = 20  # samples per second
+        self.signal = None  # storing loaded signals from the file
+        self._rate = 60  # samples per second
         self.timer.start(int(1000 / self._rate))  # The delay that the draw method takes for each call
-        self.view_width = 50  # initial width
-        self.view_height = 1  # initial height
+        self.view_width = 3e3  # initial width
+        self.view_height = 3.5e4  # initial height
         self._xRange = [0, self.view_width]
-        self._yRange = [0, self.view_height]
+        self._yRange = [- self.view_height, self.view_height]
         self._display_axis = True
         self._display_grid = True
         self.view.setXRange(self._xRange[0], self._xRange[1], padding=0)
@@ -112,8 +110,8 @@ class SignalViewerLogic(object):
         self._apply_limits = value
         if self._apply_limits == True:
             yMax = yMin = xMax = xMin = 0
-            for signal in self.plotted_signals:
-                bounds = signal.bounds
+            if self.signal:
+                bounds = self.signal.bounds
                 if yMax < bounds[0]:
                     yMax = bounds[0]
                 if xMax < bounds[1]:
@@ -162,8 +160,6 @@ class SignalViewerLogic(object):
         duration = 1000 / self._rate
         self.timer.start(int(duration))
 
-
-
     @property
     def yRange(self) -> list:
         return self.view.viewRange()[1]
@@ -185,16 +181,8 @@ class SignalViewerLogic(object):
     def set_title(self, title: str):
         self.view.setTitle(title)
 
-    def load_dataset(self, filename: str, loaded_signals: int = None) -> None:
-        signals = []
-        if loaded_signals is None:
-            signals = pd.read_csv(filename).to_numpy()
-        else:
-            signals = pd.read_csv(filename).head(loaded_signals).to_numpy()
-
-        for s in signals:
-            sig = PlotSignal(data=s)
-            self.signals.append(sig)
+    def load_dataset(self, signal: Signal) -> None:
+        self.signal = PlotSignal(data=signal.original_signal)
 
     # deprecated methods
     '''def zoom_in(self,scale: int)-> None:
