@@ -745,6 +745,7 @@ border:none;</string>
           <font>
            <family>Ubuntu</family>
            <pointsize>-1</pointsize>
+           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1967,6 +1968,12 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2006,6 +2013,12 @@ border:none;</string>
              <widget class="QSlider" name="uniform_slider_2">
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2047,6 +2060,12 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2086,6 +2105,12 @@ border:none;</string>
              <widget class="QSlider" name="uniform_slider_4">
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2127,6 +2152,12 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2166,6 +2197,12 @@ border:none;</string>
              <widget class="QSlider" name="uniform_slider_6">
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2207,6 +2244,12 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2246,6 +2289,12 @@ border:none;</string>
              <widget class="QSlider" name="uniform_slider_8">
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2287,6 +2336,12 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -2326,6 +2381,12 @@ border:none;</string>
              <widget class="QSlider" name="uniform_slider_10">
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>

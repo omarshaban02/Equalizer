@@ -124,6 +124,24 @@ class MainApp(QMainWindow, ui):
 
         # self.window_comboBox.currentTextChanged.connect()
 
+        self.uniform_slider_1.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider.getValue(),
+                                                                               (0,2000),
+                                                                               )
+                                                    )
+        self.uniform_slider_2.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider.getValue(),
+                                                                               (2000,4000),
+                                                                               )
+                                                    )
+        self.uniform_slider_3.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider.getValue(),
+                                                                               (4000,6000),
+                                                                               )
+                                                    )
+    def uniform_slider(self,w_type, value,freqs_range):
+        self.signal.equalize(w_type, value/10,freqs_range=freqs_range)
+
     def open_signal(self):
         options = QFileDialog.Options()
         file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
