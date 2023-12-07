@@ -10,7 +10,6 @@ import pyqtgraph as pg
 from threading import Thread
 from time import sleep
 
-
 class SignalSlice(object):
     def __init__(self, name, freqs_indices=None, time_range=None):
         self._name = name
@@ -203,7 +202,8 @@ class Signal(object):
         self._sample_width = None
         self._signal_sound = None
         self._stream = None
-        self._signal_spectrogram = None
+        self._original_signal_spectrogram = None
+        self._equalized_signal_spectrogram = None
         self._signal_slices = None
 
     @property
@@ -286,9 +286,14 @@ class Signal(object):
         self._signal_phases = value
 
     @property
-    def signal_spectrogram(self):
-        self._signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
-        return self._signal_spectrogram
+    def original_signal_spectrogram(self):
+        self._original_signal_spectrogram = spectrogram(self.original_signal, fs=self.sampling_rate)
+        return self._original_signal_spectrogram
+
+    @property
+    def equalized_signal_spectrogram(self):
+        self._equalized_signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
+        return self._equalized_signal_spectrogram
 
     @property
     def signal_slices(self):
