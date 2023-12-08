@@ -146,57 +146,57 @@ class MainApp(QMainWindow, ui):
 
         self.uniform_slider_1.valueChanged.connect(lambda: self.uniform_slider('rectangle',
                                                                                self.uniform_slider_1.value(),
-                                                                               (0,2000),
+                                                                               (0, 2000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_2.valueChanged.connect(lambda: self.uniform_slider('rectangle',
                                                                                self.uniform_slider_2.value(),
-                                                                               (2000,4000),
+                                                                               (2000, 4000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_3.valueChanged.connect(lambda: self.uniform_slider('rectangle',
                                                                                self.uniform_slider_3.value(),
-                                                                               (4000,6000),
+                                                                               (4000, 6000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_4.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_4.value(),
-                                                                               (6000,8000),
+                                                                               (6000, 8000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_5.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_5.value(),
-                                                                               (8000,10000),
+                                                                               (8000, 10000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_6.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_6.value(),
-                                                                               (10000,12000),
+                                                                               (10000, 12000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_7.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_7.value(),
-                                                                               (12000,14000),
+                                                                               (12000, 14000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_8.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_8.value(),
-                                                                               (14000,16000),
+                                                                               (14000, 16000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_9.valueChanged.connect(lambda: self.uniform_slider('hamming',
                                                                                self.uniform_slider_9.value(),
-                                                                               (16000,18000),
+                                                                               (16000, 18000),
                                                                                )
-                                                    )
+                                                   )
         self.uniform_slider_10.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_10.value(),
-                                                                               (18000,20000),
-                                                                               )
+                                                                                self.uniform_slider_10.value(),
+                                                                                (18000, 20000),
+                                                                                )
                                                     )
-    def uniform_slider(self,w_type, value,freqs_range):
-        self.signal.equalize(w_type, value/10,freqs_range=freqs_range)
-        
+
+    def uniform_slider(self, w_type, value, freqs_range):
+        self.signal.equalize(w_type, value / 10, freqs_range=freqs_range)
 
     def open_signal(self):
         options = QFileDialog.Options()
