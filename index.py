@@ -194,20 +194,18 @@ class MainApp(QMainWindow, ui):
                                                                                 (18000, 20000),
                                                                                 )
                                                     )
-<<<<<<< HEAD
+
     def uniform_slider(self,w_type, value,freqs_range):
-        self.signal.equalize(w_type, value/10,freqs_range=freqs_range)
+        self.signal.equalize(w_type, value/50,freqs_range=freqs_range)
         self.equalized_signal_viewer.clear()
         self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
         self.equalized_signal_viewer.add_signal()
+        self.frequency_plot_widget.clear()
+        self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
+                                         np.log10(self.signal.signal_modified_amplitudes[:len(self.signal.signal_frequencies)]))
+        self.frequency_plot_widget.addItem(self.frequency_plot_item)
         self.equalized_spectro_plot_widget.clear()
-        
-        
-=======
-
-    def uniform_slider(self, w_type, value, freqs_range):
-        self.signal.equalize(w_type, value / 10, freqs_range=freqs_range)
->>>>>>> 36dddb49a630c16c7886613197fa631dabd60acb
+        plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
 
     def open_signal(self):
         options = QFileDialog.Options()

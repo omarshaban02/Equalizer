@@ -1968,11 +1968,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2014,11 +2017,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2060,11 +2066,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2106,11 +2115,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2152,11 +2164,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2198,11 +2213,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2244,11 +2262,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2290,11 +2311,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2336,11 +2360,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -2382,11 +2409,14 @@ border:none;</string>
               <property name="cursor">
                <cursorShape>OpenHandCursor</cursorShape>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
-               <number>20</number>
+               <number>100</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>50</number>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
