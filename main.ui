@@ -745,7 +745,6 @@ border:none;</string>
           <font>
            <family>Ubuntu</family>
            <pointsize>-1</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -801,7 +800,7 @@ border:none;</string>
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="orignal_spectro_frame">
+        <widget class="QFrame" name="original_spectro_frame">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>

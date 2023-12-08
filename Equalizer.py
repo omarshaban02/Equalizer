@@ -10,6 +10,7 @@ import pyqtgraph as pg
 from threading import Thread
 from time import sleep
 
+
 class SignalSlice(object):
     def __init__(self, name, freqs_indices=None, time_range=None):
         self._name = name

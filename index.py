@@ -74,7 +74,7 @@ class MainApp(QMainWindow, ui):
             self.uniform_sliders, self.animal_sliders, self.musical_sliders, self.ecg_sliders
         ]
 
-        self.play_pause_status = True
+        self.play_pause_state = True
 
         # original signal
         self.original_plot_widget = pg.PlotWidget(self.original_graphics_view)
@@ -103,6 +103,9 @@ class MainApp(QMainWindow, ui):
         self.equalized_signal_viewer.view.setTitle("Equalized Signal")
 
         self.equalized_signal_viewer.signal = self.equalized_signal_plot
+
+        # Link both graphs
+        self.original_signal_viewer.linkTo(self.equalized_signal_viewer)
 
         # original signal spectrogram
         self.original_spectro_plot_widget = pg.PlotWidget(self.original_spectro_graphics_view)
@@ -156,13 +159,14 @@ class MainApp(QMainWindow, ui):
 
         self.open_btn.clicked.connect(self.open_signal)
 
-        # self.play_pause_btn.clicked.connect()
-        # self.stop_btn.clicked.connect()
-        # self.replay_btn.clicked.connect()
-        # self.reset_view_btn.clicked.connect()
-        # self.zoom_in_btn.clicked.connect()
-        # self.zoom_out_btn.clicked.connect()
-        # self.speed_slider.valueChanged.connect()
+        self.play_pause_btn.clicked.connect(self.play_pause)
+        self.stop_btn.clicked.connect(self.stop)
+        self.replay_btn.clicked.connect(self.replay)
+        self.reset_view_btn.clicked.connect(self.set_home_view)
+        self.zoom_in_btn.clicked.connect(self.zoom_in)
+        self.zoom_out_btn.clicked.connect(self.zoom_out)
+        self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
+        self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
 
         # self.window_comboBox.currentTextChanged.connect()
 
@@ -229,25 +233,87 @@ class MainApp(QMainWindow, ui):
 
         self.original_signal_viewer.clear()
         self.original_spectro_plot_widget.clear()
+
         self.original_signal_viewer.load_dataset(self.signal.original_signal)
         self.original_signal_viewer.add_signal()
+
         plot_spectrogram(self.original_spectro_plot_widget, self.signal.original_signal_spectrogram)
 
         self.refresh_after_equalizing(self.signal.signal_amplitudes)
 
-    def refresh_after_equalizing(self, data_in_freq):
+    def refresh_after_equalizing(self, amplitudes):
         self.equalized_signal_viewer.clear()
         self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
         self.equalized_signal_viewer.add_signal()
 
         self.frequency_plot_widget.clear()
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
-                                         np.log10(data_in_freq[
+                                         np.log10(amplitudes[
                                                   :len(self.signal.signal_frequencies)]))
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
         self.equalized_spectro_plot_widget.clear()
         plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+
+    def play_pause(self):
+        if self.signal.original_signal:
+            if self.play_pause_state:
+                self.original_signal_viewer.play()
+                self.equalized_signal_viewer.play()
+                self.play_pause_state = False
+                self.play_pause_btn.setIcon(QIcon(f'icons/pause copy.svg'))
+            else:
+                self.original_signal_viewer.pause()
+                self.equalized_signal_viewer.pause()
+                self.play_pause_state = True
+                self.play_pause_btn.setIcon(QIcon(f'icons/play copy.svg'))
+        else:
+            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+
+    def replay(self):
+        if self.signal.original_signal:
+            self.original_signal_viewer.replay()
+            self.equalized_signal_viewer.replay()
+            self.play_pause_btn.setIcon(QIcon(f'icons/pause copy.svg'))
+            self.play_pause_state = False
+            self.original_signal_viewer.home_view()
+            self.equalized_signal_viewer.home_view()
+        else:
+            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+
+    def set_home_view(self):
+        self.original_signal_viewer.home_view()
+        self.equalized_signal_viewer.home_view()
+
+    def zoom_in(self):
+        original_view_box = self.original_plot_widget.getViewBox()
+        equalized_view_box = self.equalized_plot_widget.getViewBox()
+        original_view_box.scaleBy(s=(0.9, 0.9))
+        equalized_view_box.scaleBy(s=(0.9, 0.9))
+
+    def zoom_out(self):
+        original_view_box = self.original_plot_widget.getViewBox()
+        equalized_view_box = self.equalized_plot_widget.getViewBox()
+        original_view_box.scaleBy(s=(1.1, 1.1))
+        equalized_view_box.scaleBy(s=(1.1, 1.1))
+
+    def stop(self):
+        if self.signal.original_signal:
+            self.original_signal_viewer.replay()
+            self.equalized_signal_viewer.replay()
+            self.play_pause_btn.setIcon(QIcon(f'icons/play copy.svg'))
+            self.play_pause_state = True
+            self.original_signal_viewer.pause()
+            self.equalized_signal_viewer.pause()
+            self.original_signal_viewer.home_view()
+            self.equalized_signal_viewer.home_view()
+        else:
+            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+
+    def change_speed(self, new_speed):
+        if new_speed:
+            self.original_signal_viewer.rate = new_speed
+            self.equalized_signal_viewer.rate = new_speed
 
     def change_sliders_for_modes(self, text):
         for sliders_frame in self.sliders_frames:

@@ -343,7 +343,7 @@ class SignalViewerLogic(object):
         self.signal = None
         self.view.clear()
 
-    def linkTo(self, other: pg.PlotWidget):
+    def linkTo(self, other):
         if other is not None:
             self.view.setXLink(other.view)
             self.view.setYLink(other.view)
