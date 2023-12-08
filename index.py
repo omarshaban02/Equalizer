@@ -52,6 +52,28 @@ class MainApp(QMainWindow, ui):
             self.sliders_frames[sliders_frame].setVisible(False)
         self.sliders_frames["Uniform Mode"].setVisible(True)
 
+        self.uniform_sliders = [
+            self.uniform_slider_1, self.uniform_slider_2, self.uniform_slider_3, self.uniform_slider_4,
+            self.uniform_slider_5, self.uniform_slider_6, self.uniform_slider_7, self.uniform_slider_8,
+            self.uniform_slider_9, self.uniform_slider_10
+        ]
+
+        self.animal_sliders = [
+
+        ]
+
+        self.musical_sliders = [
+
+        ]
+
+        self.ecg_sliders = [
+
+        ]
+
+        self.sliders = [
+            self.uniform_sliders, self.animal_sliders, self.musical_sliders, self.ecg_sliders
+        ]
+
         self.play_pause_status = True
 
         # original signal
@@ -144,72 +166,60 @@ class MainApp(QMainWindow, ui):
 
         # self.window_comboBox.currentTextChanged.connect()
 
-        self.uniform_slider_1.valueChanged.connect(lambda: self.uniform_slider('rectangle',
-                                                                               self.uniform_slider_1.value(),
-                                                                               (0, 2000),
-                                                                               )
+        self.uniform_slider_1.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('rectangle',
+                                                                                            self.uniform_slider_1.value(),
+                                                                                            (0, 2000),
+                                                                                            )
                                                    )
-        self.uniform_slider_2.valueChanged.connect(lambda: self.uniform_slider('rectangle',
-                                                                               self.uniform_slider_2.value(),
-                                                                               (2000, 4000),
-                                                                               )
+        self.uniform_slider_2.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('rectangle',
+                                                                                            self.uniform_slider_2.value(),
+                                                                                            (2000, 4000),
+                                                                                            )
                                                    )
-        self.uniform_slider_3.valueChanged.connect(lambda: self.uniform_slider('rectangle',
-                                                                               self.uniform_slider_3.value(),
-                                                                               (4000, 6000),
-                                                                               )
+        self.uniform_slider_3.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('rectangle',
+                                                                                            self.uniform_slider_3.value(),
+                                                                                            (4000, 6000),
+                                                                                            )
                                                    )
-        self.uniform_slider_4.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_4.value(),
-                                                                               (6000, 8000),
-                                                                               )
+        self.uniform_slider_4.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_4.value(),
+                                                                                            (6000, 8000),
+                                                                                            )
                                                    )
-        self.uniform_slider_5.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_5.value(),
-                                                                               (8000, 10000),
-                                                                               )
+        self.uniform_slider_5.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_5.value(),
+                                                                                            (8000, 10000),
+                                                                                            )
                                                    )
-        self.uniform_slider_6.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_6.value(),
-                                                                               (10000, 12000),
-                                                                               )
+        self.uniform_slider_6.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_6.value(),
+                                                                                            (10000, 12000),
+                                                                                            )
                                                    )
-        self.uniform_slider_7.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_7.value(),
-                                                                               (12000, 14000),
-                                                                               )
+        self.uniform_slider_7.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_7.value(),
+                                                                                            (12000, 14000),
+                                                                                            )
                                                    )
-        self.uniform_slider_8.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_8.value(),
-                                                                               (14000, 16000),
-                                                                               )
+        self.uniform_slider_8.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_8.value(),
+                                                                                            (14000, 16000),
+                                                                                            )
                                                    )
-        self.uniform_slider_9.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider_9.value(),
-                                                                               (16000, 18000),
-                                                                               )
+        self.uniform_slider_9.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                            self.uniform_slider_9.value(),
+                                                                                            (16000, 18000),
+                                                                                            )
                                                    )
-        self.uniform_slider_10.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                                self.uniform_slider_10.value(),
-                                                                                (18000, 20000),
-                                                                                )
+        self.uniform_slider_10.valueChanged.connect(lambda: self.equalize_by_sliders_uniform('hamming',
+                                                                                             self.uniform_slider_10.value(),
+                                                                                             (18000, 20000),
+                                                                                             )
                                                     )
 
-    def uniform_slider(self, w_type, value, freqs_range):
+    def equalize_by_sliders_uniform(self, w_type, value, freqs_range):
         self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
-
-        self.equalized_signal_viewer.clear()
-        self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
-        self.equalized_signal_viewer.add_signal()
-
-        self.frequency_plot_widget.clear()
-        self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
-                                         np.log10(self.signal.signal_modified_amplitudes[
-                                                  :len(self.signal.signal_frequencies)]))
-        self.frequency_plot_widget.addItem(self.frequency_plot_item)
-
-        self.equalized_spectro_plot_widget.clear()
-        plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+        self.refresh_after_equalizing(self.signal.signal_modified_amplitudes)
 
     def open_signal(self):
         options = QFileDialog.Options()
@@ -218,22 +228,25 @@ class MainApp(QMainWindow, ui):
         self.signal.import_signal(file_name, "stft")
 
         self.original_signal_viewer.clear()
-        self.equalized_signal_viewer.clear()
-        self.frequency_plot_widget.clear()
         self.original_spectro_plot_widget.clear()
-        self.equalized_spectro_plot_widget.clear()
-
         self.original_signal_viewer.load_dataset(self.signal.original_signal)
-        self.equalized_signal_viewer.load_dataset(self.signal.original_signal)
         self.original_signal_viewer.add_signal()
-        self.equalized_signal_viewer.add_signal()
-
-        self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
-                                         np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
-        self.frequency_plot_widget.addItem(self.frequency_plot_item)
-
         plot_spectrogram(self.original_spectro_plot_widget, self.signal.original_signal_spectrogram)
 
+        self.refresh_after_equalizing(self.signal.signal_amplitudes)
+
+    def refresh_after_equalizing(self, data_in_freq):
+        self.equalized_signal_viewer.clear()
+        self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
+        self.equalized_signal_viewer.add_signal()
+
+        self.frequency_plot_widget.clear()
+        self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
+                                         np.log10(data_in_freq[
+                                                  :len(self.signal.signal_frequencies)]))
+        self.frequency_plot_widget.addItem(self.frequency_plot_item)
+
+        self.equalized_spectro_plot_widget.clear()
         plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
 
     def change_sliders_for_modes(self, text):
