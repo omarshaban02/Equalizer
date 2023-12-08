@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 import pyqtgraph as pg
 import sys
 from pathlib import Path
+import numpy as np
 
 from PyQt5.uic import loadUiType
 
@@ -178,17 +179,13 @@ class MainApp(QMainWindow, ui):
         self.original_signal_viewer.add_signal()
         self.equalized_signal_viewer.add_signal()
 
-        # self.frequency_plot_item.setData(self.signal.signal_frequencies, self.signal.signal_amplitudes)
-        # self.frequency_plot_widget.addItem(self.frequency_plot_item)
+        self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
+                                         np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
+        self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
         plot_spectrogram(self.original_spectro_plot_widget, self.signal.original_signal_spectrogram)
-        # self.original_spectro_plot_item.setImage(self.signal.original_signal_spectrogram)
-        # self.original_spectro_plot_widget.setLimits(yMax=self.original_spectro_plot_item.width(), xMax=self.original_spectro_plot_item.height(), yMin=0, xMin=0)
-        # self.original_spectro_plot_widget.addItem(self.original_spectro_plot_item)
 
         plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
-        # self.equalized_spectro_plot_item.setImage(self.signal.equalized_signal_spectrogram)
-        # self.equalized_spectro_plot_widget.addItem(self.equalized_spectro_plot_item)
 
     def change_sliders_for_modes(self, text):
         for sliders_frame in self.sliders_frames:
