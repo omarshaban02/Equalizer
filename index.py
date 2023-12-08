@@ -195,6 +195,11 @@ class MainApp(QMainWindow, ui):
                                                     )
     def uniform_slider(self,w_type, value,freqs_range):
         self.signal.equalize(w_type, value/10,freqs_range=freqs_range)
+        self.equalized_signal_viewer.clear()
+        self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
+        self.equalized_signal_viewer.add_signal()
+        self.equalized_spectro_plot_widget.clear()
+        
         
 
     def open_signal(self):
@@ -209,8 +214,8 @@ class MainApp(QMainWindow, ui):
         self.original_spectro_plot_widget.clear()
         self.equalized_spectro_plot_widget.clear()
 
-        self.original_signal_viewer.load_dataset(self.signal)
-        self.equalized_signal_viewer.load_dataset(self.signal)
+        self.original_signal_viewer.load_dataset(self.signal.original_signal)
+        self.equalized_signal_viewer.load_dataset(self.signal.original_signal)
         self.original_signal_viewer.add_signal()
         self.equalized_signal_viewer.add_signal()
 

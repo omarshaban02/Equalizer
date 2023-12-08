@@ -181,8 +181,8 @@ class SignalViewerLogic(object):
     def set_title(self, title: str):
         self.view.setTitle(title)
 
-    def load_dataset(self, signal: Signal) -> None:
-        self.signal = PlotSignal(data=signal.original_signal)
+    def load_dataset(self, signal: np.ndarray) -> None:
+        self.signal = PlotSignal(data=signal)
 
     # deprecated methods
     '''def zoom_in(self,scale: int)-> None:
