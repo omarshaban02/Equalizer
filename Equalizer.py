@@ -197,6 +197,8 @@ class Signal(object):
         self._signal_frequencies = None
         self._signal_amplitudes = None
         self._signal_phases = None
+        self._signal_modified_amplitudes = None
+        self._signal_modified_phases = None
         self._duration = None
         self._number_of_samples = None
         self._sample_width = None
@@ -216,7 +218,7 @@ class Signal(object):
 
     @property
     def signal_fft(self):
-        self._signal_fft = self.signal_amplitudes * np.exp(self.signal_phases * 1j)
+        self._signal_fft = self.signal_modified_amplitudes * np.exp(self.signal_modified_phases * 1j)
         return self._signal_fft
 
     @signal_fft.setter
@@ -276,6 +278,13 @@ class Signal(object):
     @signal_amplitudes.setter
     def signal_amplitudes(self, value):
         self._signal_amplitudes = value
+    @property
+    def signal_modified_amplitudes(self):
+        return self._signal_modified_amplitudes
+
+    @signal_modified_amplitudes.setter
+    def signal_modified_amplitudes(self, value):
+        self._signal_modified_amplitudes = value
 
     @property
     def signal_phases(self):
@@ -283,7 +292,14 @@ class Signal(object):
 
     @signal_phases.setter
     def signal_phases(self, value):
-        self._signal_phases = value
+       self._signal_phases = value
+    @property
+    def signal_modified_phases(self):
+        return self._signal_modified_phases
+
+    @signal_modified_phases.setter
+    def signal_modified_phases(self, value):
+        self._signal_modified_phases = value
 
     @property
     def original_signal_spectrogram(self):
@@ -403,7 +419,7 @@ class Signal(object):
             else:
                 raise ValueError('Unknown window')
 
-            self.signal_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
+            self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
             # for negative part
             temp_f_start = f_start
             f_start = -f_end
@@ -422,7 +438,7 @@ class Signal(object):
                 window = equalizing_factor
             else:
                 raise ValueError('Unknown window')
-            self.signal_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
+            self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
 
     def import_signal(self, file, mode='fft'):
         file = wave.open(file, "rb")
@@ -437,12 +453,16 @@ class Signal(object):
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
+            self.signal_modified_amplitudes = np.abs(sig_fft)
+            self.signal_modified_phases = np.angle(sig_fft)
 
         elif mode == 'stft':
             self.mode = 'stft'
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
+            self.signal_modified_amplitudes = np.abs(sig_fft)
+            self.signal_modified_phases = np.angle(sig_fft)
             self.signal_stft = stft(self.original_signal, fs=self.sampling_rate)
             self.signal_zxx = self.signal_stft[2]
             self.n_time_segments = len(self.signal_stft[1])
