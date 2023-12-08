@@ -125,18 +125,53 @@ class MainApp(QMainWindow, ui):
         # self.window_comboBox.currentTextChanged.connect()
 
         self.uniform_slider_1.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider.getValue(),
+                                                                               self.uniform_slider_1.getValue(),
                                                                                (0,2000),
                                                                                )
                                                     )
         self.uniform_slider_2.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider.getValue(),
+                                                                               self.uniform_slider_2.getValue(),
                                                                                (2000,4000),
                                                                                )
                                                     )
         self.uniform_slider_3.valueChanged.connect(lambda: self.uniform_slider('hamming',
-                                                                               self.uniform_slider.getValue(),
+                                                                               self.uniform_slider_3.getValue(),
                                                                                (4000,6000),
+                                                                               )
+                                                    )
+        self.uniform_slider_4.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_4.getValue(),
+                                                                               (6000,8000),
+                                                                               )
+                                                    )
+        self.uniform_slider_5.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_5.getValue(),
+                                                                               (8000,10000),
+                                                                               )
+                                                    )
+        self.uniform_slider_6.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_6.getValue(),
+                                                                               (10000,12000),
+                                                                               )
+                                                    )
+        self.uniform_slider_7.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_7.getValue(),
+                                                                               (12000,14000),
+                                                                               )
+                                                    )
+        self.uniform_slider_8.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_8.getValue(),
+                                                                               (14000,16000),
+                                                                               )
+                                                    )
+        self.uniform_slider_9.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_9.getValue(),
+                                                                               (16000,18000),
+                                                                               )
+                                                    )
+        self.uniform_slider_10.valueChanged.connect(lambda: self.uniform_slider('hamming',
+                                                                               self.uniform_slider_10.getValue(),
+                                                                               (18000,20000),
                                                                                )
                                                     )
     def uniform_slider(self,w_type, value,freqs_range):
