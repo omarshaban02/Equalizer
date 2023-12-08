@@ -1,2 +1,2 @@
-channel1 = sound[:sound.shape[0]//2]
-# channel2 = sound[sound.shape[0]//2:]
+
+        # self.original_spectro_plot_widget.clear()
