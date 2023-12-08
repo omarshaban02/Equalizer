@@ -39,10 +39,19 @@ class PlotSignal(object):
     # update current sample, plot data and current sample index.
     def advance(self):
         if not (self.stop_drawing or self.completed):
-            self.current_sample = self.data[self.current_sample_index]
-            self.plotted_data.append(self.current_sample)
-            self.current_sample_index += 1
-            if len(self.data) == len(self.plotted_data):
+            # self.current_sample = self.data[self.current_sample_index]
+            # self.plotted_data.append(self.current_sample)
+            # self.current_sample_index += 1
+            if 4410*(self.current_sample_index+1) < len(self.data):
+                self.current_sample = self.data[4410*self.current_sample_index:4410*(self.current_sample_index+1)]
+                self.plotted_data = np.append(self.plotted_data,self.current_sample)
+                self.current_sample_index += 1
+            else:
+                self.current_sample = self.data[4410*self.current_sample_index:]
+                self.plotted_data = np.append(self.plotted_data,self.current_sample)
+                self.current_sample_index += 1
+
+            if 4410*(self.current_sample_index+1) > len(self.data):
                 self.completed = True
                 self.stop_drawing = True
                 self.is_active = False
@@ -72,7 +81,7 @@ class SignalViewerLogic(object):
         self.timer = QTimer()
         self.timer.timeout.connect(self.draw)
         self.signal = None  # storing loaded signals from the file
-        self._rate = 60  # samples per second
+        self._rate = 10  # samples per second
         self.timer.start(int(1000 / self._rate))  # The delay that the draw method takes for each call
         self.view_width = 3e3  # initial width
         self.view_height = 3.5e4  # initial height

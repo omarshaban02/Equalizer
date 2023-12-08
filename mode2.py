@@ -81,7 +81,7 @@ freq_components = [
     # ('horse',[i for i in range(4,18)], [6,7]),
     # ('frog',[0,2,4,6,9,10,11,12,13,1,5], [3.8,4.5]),
     # ('cow',[i for i in range(0,25)], [0,1]),
-    # ('birds',[i for i in range(0,30)], [1,2.5]),
+    # ('dolphin',[i for i in range(0,30)], [1,2.5]),
     ]
 for animal_tuple in freq_components:
     n_start = int(animal_tuple[2][0]* times.shape[0]/duration)
