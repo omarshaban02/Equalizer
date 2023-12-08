@@ -14,6 +14,17 @@ import SignalViewer as sv
 ui, _ = loadUiType('main.ui')
 
 
+def plot_spectrogram(widget, sxx):
+    # Plot Spectrogram
+    img = pg.ImageItem()
+    img.setImage(sxx)
+    widget.addItem(img)
+
+    # Set colormap
+    colormap = pg.colormap.get('viridis')
+    img.setColorMap(colormap)
+
+
 class MainApp(QMainWindow, ui):
     _show_hide_flag = True
 
@@ -29,10 +40,16 @@ class MainApp(QMainWindow, ui):
         self.equalized_signal_plot = sv.PlotSignal()
 
         # initiate sliders frames status
-        self.uniform_sliders_frame.setVisible(True)
-        self.animals_sliders_frame.setVisible(False)
-        self.music_sliders_frame.setVisible(False)
-        self.ecg_sliders_frame.setVisible(False)
+        self.sliders_frames = {
+            "Uniform Mode": self.uniform_sliders_frame,
+            "Animal Mode": self.animals_sliders_frame,
+            "Musical Mode": self.music_sliders_frame,
+            "ECG Mode": self.ecg_sliders_frame
+        }
+
+        for sliders_frame in self.sliders_frames:
+            self.sliders_frames[sliders_frame].setVisible(False)
+        self.sliders_frames["Uniform Mode"].setVisible(True)
 
         self.play_pause_status = True
 
@@ -89,6 +106,8 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_widget.setLabel("bottom", text="Frequency (Hz)")
         self.frequency_plot_widget.setLabel("left", text="Amplitude (mV)")
         self.frequency_plot_widget.setTitle("Frequency Signal")
+
+        self.frequency_plot_item = pg.PlotDataItem()
 
         # equalized signal spectrogram
         self.equalized_spectro_plot_widget = pg.PlotWidget(self.equalized_spectro_graphics_view)
@@ -185,40 +204,31 @@ class MainApp(QMainWindow, ui):
 
         self.original_signal_viewer.clear()
         self.equalized_signal_viewer.clear()
+        self.frequency_plot_widget.clear()
+        self.original_spectro_plot_widget.clear()
+        self.equalized_spectro_plot_widget.clear()
 
         self.original_signal_viewer.load_dataset(self.signal)
         self.equalized_signal_viewer.load_dataset(self.signal)
         self.original_signal_viewer.add_signal()
         self.equalized_signal_viewer.add_signal()
 
-        self.original_spectro_plot_item.setImage(self.signal.original_signal_spectrogram)
-        self.original_spectro_plot_widget.setLimits(yMax=self.original_spectro_plot_item.width(), xMax=self.original_spectro_plot_item.height(), yMin=0, xMin=0)
-        self.original_spectro_plot_widget.addItem(self.original_spectro_plot_item)
+        # self.frequency_plot_item.setData(self.signal.signal_frequencies, self.signal.signal_amplitudes)
+        # self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
-        self.equalized_spectro_plot_item.setImage(self.signal.equalized_signal_spectrogram)
-        self.equalized_spectro_plot_widget.addItem(self.equalized_spectro_plot_item)
+        plot_spectrogram(self.original_spectro_plot_widget, self.signal.original_signal_spectrogram)
+        # self.original_spectro_plot_item.setImage(self.signal.original_signal_spectrogram)
+        # self.original_spectro_plot_widget.setLimits(yMax=self.original_spectro_plot_item.width(), xMax=self.original_spectro_plot_item.height(), yMin=0, xMin=0)
+        # self.original_spectro_plot_widget.addItem(self.original_spectro_plot_item)
+
+        plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+        # self.equalized_spectro_plot_item.setImage(self.signal.equalized_signal_spectrogram)
+        # self.equalized_spectro_plot_widget.addItem(self.equalized_spectro_plot_item)
 
     def change_sliders_for_modes(self, text):
-        if text == "Uniform Mode":
-            self.uniform_sliders_frame.setVisible(True)
-            self.animals_sliders_frame.setVisible(False)
-            self.music_sliders_frame.setVisible(False)
-            self.ecg_sliders_frame.setVisible(False)
-        if text == "Animal Mode":
-            self.uniform_sliders_frame.setVisible(False)
-            self.animals_sliders_frame.setVisible(True)
-            self.music_sliders_frame.setVisible(False)
-            self.ecg_sliders_frame.setVisible(False)
-        if text == "Musical Mode":
-            self.uniform_sliders_frame.setVisible(False)
-            self.animals_sliders_frame.setVisible(False)
-            self.music_sliders_frame.setVisible(True)
-            self.ecg_sliders_frame.setVisible(False)
-        if text == "ECG Mode":
-            self.uniform_sliders_frame.setVisible(False)
-            self.animals_sliders_frame.setVisible(False)
-            self.music_sliders_frame.setVisible(False)
-            self.ecg_sliders_frame.setVisible(True)
+        for sliders_frame in self.sliders_frames:
+            self.sliders_frames[sliders_frame].setVisible(False)
+        self.sliders_frames[text].setVisible(True)
 
     def show_hide_spectro_widget(self):
         if self._show_hide_flag:

@@ -266,7 +266,7 @@ class Signal(object):
 
     @property
     def signal_frequencies(self):
-        self._signal_frequencies = fftfreq(self.number_of_samples, 1 / self.sampling_rate)
+        self._signal_frequencies = fftfreq(int(self.number_of_samples), 1 / self.sampling_rate)
         return self._signal_frequencies
 
     @property
