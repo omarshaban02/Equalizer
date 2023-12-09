@@ -178,100 +178,100 @@ class MainApp(QMainWindow, ui):
         self.window_comboBox.currentTextChanged.connect(self.update_smoothing_window)
 
         # uniform sliders########################################################################################
-        self.uniform_slider_1.valueChanged.connect(lambda: self.range_slider('rectangle',
+        self.uniform_slider_1.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_1.value(),
                                                                              (0, 2000),
                                                                              )
                                                    )
-        self.uniform_slider_2.valueChanged.connect(lambda: self.range_slider('rectangle',
+        self.uniform_slider_2.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_2.value(),
                                                                              (2000, 4000),
                                                                              )
                                                    )
-        self.uniform_slider_3.valueChanged.connect(lambda: self.range_slider('rectangle',
+        self.uniform_slider_3.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_3.value(),
                                                                              (4000, 6000),
                                                                              )
                                                    )
-        self.uniform_slider_4.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_4.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_4.value(),
                                                                              (6000, 8000),
                                                                              )
                                                    )
-        self.uniform_slider_5.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_5.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_5.value(),
                                                                              (8000, 10000),
                                                                              )
                                                    )
-        self.uniform_slider_6.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_6.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_6.value(),
                                                                              (10000, 12000),
                                                                              )
                                                    )
-        self.uniform_slider_7.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_7.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_7.value(),
                                                                              (12000, 14000),
                                                                              )
                                                    )
-        self.uniform_slider_8.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_8.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_8.value(),
                                                                              (14000, 16000),
                                                                              )
                                                    )
-        self.uniform_slider_9.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_9.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                              self.uniform_slider_9.value(),
                                                                              (16000, 18000),
                                                                              )
                                                    )
-        self.uniform_slider_10.valueChanged.connect(lambda: self.range_slider('hamming',
+        self.uniform_slider_10.valueChanged.connect(lambda: self.range_slider(self.smoothing_window,
                                                                               self.uniform_slider_10.value(),
                                                                               (18000, 20000),
                                                                               )
                                                     )
         # animals sliders #################################################################
         self.elephant_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.elephant_slider.value(),
             'elephant'
         ))
         self.dolphin_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.dolphin_slider.value(),
             'dolphin'
         ))
         self.cow_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.cow_slider.value(),
             'cow'
         ))
         self.horse_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.horse_slider.value(),
             'horse'
         ))
         self.wolf_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.wolf_slider.value(),
             'wolf'
         ))
         # musics sliders #################################################################
         self.flute_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.flute_slider.value(),
             'flute'
         ))
         self.guitar_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.guitar_slider.value(),
             'guitar'
         ))
         self.piano_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.piano_slider.value(),
             'piano'
         ))
         self.trumpet_slider.valueChanged.connect(lambda: self.slice_slider(
-            'rectangle',
+            self.smoothing_window,
             self.trumpet_slider.value(),
             'trumpet'
         ))
@@ -407,7 +407,7 @@ class MainApp(QMainWindow, ui):
             self._show_hide_flag = True
 
     def update_smoothing_window(self, window):
-        self.smoothing_window = window
+        self.smoothing_window = window.lower()
 
     def change_slider_cursor(self, slider):
         slider.setCursor(Qt.ClosedHandCursor)

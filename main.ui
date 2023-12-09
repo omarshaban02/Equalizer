@@ -1680,7 +1680,7 @@ border:none;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QSlider" name="gutiar_slider">
+               <widget class="QSlider" name="guitar_slider">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
