@@ -74,7 +74,10 @@ class MainApp(QMainWindow, ui):
             self.uniform_sliders, self.animal_sliders, self.musical_sliders, self.ecg_sliders
         ]
 
+        # Flags
         self.play_pause_state = True
+        self.play_pause_original_sound_state = False
+        self.play_pause_equalized_sound_state = False
 
         # original signal
         self.original_plot_widget = pg.PlotWidget(self.original_graphics_view)
@@ -167,8 +170,10 @@ class MainApp(QMainWindow, ui):
         self.zoom_out_btn.clicked.connect(self.zoom_out)
         self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
         self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
-
+        self.original_sound_btn.clicked.connect()
+        self.equalized_sound_btn.clicked.connect()
         # self.window_comboBox.currentTextChanged.connect()
+
         # uniform sliders########################################################################################
         self.uniform_slider_1.valueChanged.connect(lambda: self.range_slider('rectangle',
                                                                              self.uniform_slider_1.value(),
