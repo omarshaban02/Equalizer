@@ -1077,17 +1077,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1180,17 +1174,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1268,17 +1256,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1353,17 +1335,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1441,17 +1417,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1538,17 +1508,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1622,15 +1586,6 @@ border:none;</string>
                <widget class="QSlider" name="wolf_slider">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1725,21 +1680,15 @@ border:none;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QSlider" name="guitar_slider">
+               <widget class="QSlider" name="gutiar_slider">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1811,17 +1760,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1893,17 +1836,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1975,17 +1912,11 @@ border:none;</string>
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
                  <number>1</number>
-                </property>
-                <property name="value">
-                 <number>50</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>

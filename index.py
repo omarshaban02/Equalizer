@@ -40,6 +40,9 @@ class MainApp(QMainWindow, ui):
         self.original_signal_plot = sv.PlotSignal()
         self.equalized_signal_plot = sv.PlotSignal()
 
+        # Smoothing Window
+        self.smoothing_window = ""
+
         # initiate sliders frames status
         self.sliders_frames = {
             "Uniform Mode": self.uniform_sliders_frame,
@@ -170,9 +173,9 @@ class MainApp(QMainWindow, ui):
         self.zoom_out_btn.clicked.connect(self.zoom_out)
         self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
         self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
-        self.original_sound_btn.clicked.connect()
-        self.equalized_sound_btn.clicked.connect()
-        # self.window_comboBox.currentTextChanged.connect()
+        # self.original_sound_btn.clicked.connect()
+        # self.equalized_sound_btn.clicked.connect()
+        self.window_comboBox.currentTextChanged.connect(self.update_smoothing_window)
 
         # uniform sliders########################################################################################
         self.uniform_slider_1.valueChanged.connect(lambda: self.range_slider('rectangle',
@@ -402,6 +405,9 @@ class MainApp(QMainWindow, ui):
             self.equalized_spectro_frame.setVisible(True)
             self.show_hide_btn.setIcon(QIcon('icons/eye copy.svg'))
             self._show_hide_flag = True
+
+    def update_smoothing_window(self, window):
+        self.smoothing_window = window
 
     def change_slider_cursor(self, slider):
         slider.setCursor(Qt.ClosedHandCursor)
