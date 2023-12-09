@@ -190,6 +190,7 @@ class Signal(object):
         self._signal_istft = None
         self._n_time_segments = None
         self._signal_zxx = None
+        self._signal_modified_zxx = None
         self._signal_stft_freqs = None
         self._mode = 'fft'  # or 'stft'
         self._nchannels = 1  # monophonic sound or stereo sound
@@ -233,7 +234,7 @@ class Signal(object):
 
     @property
     def signal_istft(self):
-        _, self._signal_istft = istft(self.signal_zxx)
+        _, self._signal_istft = istft(self.signal_modified_zxx)
         return self._signal_istft
 
     @property
@@ -310,6 +311,7 @@ class Signal(object):
     @property
     def equalized_signal_spectrogram(self):
         _, _, self._equalized_signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
+
         return self._equalized_signal_spectrogram
 
     @property
@@ -373,6 +375,16 @@ class Signal(object):
     @signal_zxx.setter
     def signal_zxx(self, value):
         self._signal_zxx = value
+    @property
+    def signal_modified_zxx(self):
+        return self._signal_modified_zxx
+
+    @signal_modified_zxx.setter
+    def signal_modified_zxx(self, value):
+        self._signal_modified_zxx = value
+        
+        
+        
 
     def equalize(self, window_type, equalizing_factor, freqs_range=None, slice_name=None):
         # apply stft
@@ -398,7 +410,10 @@ class Signal(object):
                     n_end = int(time_range[1] * self.n_time_segments / self.duration)
                     if n_end < 0: n_end = -1
                     for i, w in zip(freqs_indices, window):
-                        self.signal_zxx[i, n_start:n_end] *= w
+                        self.signal_modified_zxx[i, n_start:n_end] = w * self.signal_zxx[i, n_start:n_end]
+                    self.signal_modified_amplitudes = np.abs(fft(self.signal_istft)) 
+                    self.signal_modified_phases = np.angle(fft(self.signal_istft)) 
+                        
         # apply fft
         if freqs_range is not None:
             f_start = freqs_range[0]
@@ -466,6 +481,7 @@ class Signal(object):
             self.signal_modified_phases = np.angle(sig_fft)
             self.signal_stft = stft(self.original_signal, fs=self.sampling_rate)
             self.signal_zxx = self.signal_stft[2]
+            self.signal_modified_zxx = self.signal_stft[2].copy()
             self.n_time_segments = len(self.signal_stft[1])
 
         else:
@@ -494,20 +510,27 @@ class Signal(object):
                 out_file.writeframes(data.tobytes())
 
 
-slices = []
-slices.append(SignalSlice('elephant', [3, 4, *[i for i in range(6, 21)]], [5, -1]))
-slices.append(SignalSlice('wolf', [4, 5, 8, 10, 11, 2, 3], [3, 6]))
-slices.append(SignalSlice('horse', [i for i in range(4, 18)], [2, 3.5]))
-slices.append(SignalSlice('horse', [i for i in range(4, 18)], [6, 7]))
-slices.append(SignalSlice('frog', [0, 2, 4, 6, 9, 10, 11, 12, 13, 1, 5], [3.8, 4.5]))
-slices.append(SignalSlice('cow', [i for i in range(0, 25)], [0, 1]))
-slices.append(SignalSlice('birds', [i for i in range(0, 30)], [1, 2.5]))
+animals_slices = []
+animals_slices.append(SignalSlice('elephant', [3, 4, *[i for i in range(6, 21)]], [5, -1]))
+animals_slices.append(SignalSlice('wolf', [4, 5, 8, 10, 11, 2, 3], [3, 6]))
+animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [2, 3.5]))
+animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [6, 7]))
+animals_slices.append(SignalSlice('frog', [0, 2, 4, 6, 9, 10, 11, 12, 13, 1, 5], [3.8, 4.5]))
+animals_slices.append(SignalSlice('cow', [i for i in range(0, 25)], [0, 1]))
+animals_slices.append(SignalSlice('dolphin', [i for i in range(0, 30)], [1, 2.5]))
+musics_slices = []
+musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [1, 3.5]))
+musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [4, 7]))
+musics_slices.append(SignalSlice('guitar', [i for i in range(1, 4)], [7.5, 9]))
+musics_slices.append(SignalSlice('piano', [i for i in range(0, 9)], [0, 4.5]))
+musics_slices.append(SignalSlice('piano', [0, 3, 5, 6, 7, 8, 9], [0, 4.5]))
+musics_slices.append(SignalSlice('trumpet', [i for i in range(4, 18)], [5.5, 7.5]))
 
-sig = Signal()
-sig.import_signal(r"signal_files/animals.wav", mode='stft')
-sig.signal_slices = slices
-sig.equalize('hamming', 0, freqs_range=(0, 20000))
-sig.export('test', mode='fft')
+# sig = Signal()
+# sig.import_signal(r"signal_files/animals.wav", mode='stft')
+# sig.signal_slices = slices
+# sig.equalize('hamming', 0, freqs_range=(0, 20000))
+# sig.export('test', mode='fft')
 # p = Player(sig, mode='fft')
 # p.start()
 # sleep(10)
