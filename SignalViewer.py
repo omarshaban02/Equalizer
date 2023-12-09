@@ -325,11 +325,12 @@ class SignalViewerLogic(object):
     # draw active signals
     # this method is called by the rate specified above, default is 20 times per second
     def draw(self):
-        if not (self.signal.stop_drawing or self.signal.completed):
-            if self.signal.current_sample_index > self.xRange[1]:
-                self.horizontal_shift(1)
-            self.signal.advance()
-            self.signal.plot()
+        if self.signal is not None:
+            if not (self.signal.stop_drawing or self.signal.completed):
+                if self.signal.current_sample_index > self.xRange[1]:
+                    self.horizontal_shift(1)
+                self.signal.advance()
+                self.signal.plot()
 
 
 

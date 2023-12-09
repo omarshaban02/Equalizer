@@ -9,7 +9,7 @@ import numpy as np
 
 from PyQt5.uic import loadUiType
 
-from Equalizer import Signal, animals_slices, musics_slices
+from Equalizer import Signal,Player, animals_slices, musics_slices
 import SignalViewer as sv
 
 ui, _ = loadUiType('main.ui')
@@ -79,8 +79,10 @@ class MainApp(QMainWindow, ui):
 
         # Flags
         self.play_pause_state = True
-        self.play_pause_original_sound_state = False
-        self.play_pause_equalized_sound_state = False
+        # self.play_pause_original_sound_state = False
+        # self.play_pause_equalized_sound_state = False
+        self.original_sound_player = None
+        self.equalized_sound_player = None
 
         # original signal
         self.original_plot_widget = pg.PlotWidget(self.original_graphics_view)
@@ -173,8 +175,8 @@ class MainApp(QMainWindow, ui):
         self.zoom_out_btn.clicked.connect(self.zoom_out)
         self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
         self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
-        # self.original_sound_btn.clicked.connect()
-        # self.equalized_sound_btn.clicked.connect()
+        self.original_sound_btn.clicked.connect(self.original_sound_player_clicked)
+        self.equalized_sound_btn.clicked.connect(self.equalized_sound_player_clicked)
         self.window_comboBox.currentTextChanged.connect(self.update_smoothing_window)
 
         # uniform sliders########################################################################################
@@ -275,6 +277,18 @@ class MainApp(QMainWindow, ui):
             self.trumpet_slider.value(),
             'trumpet'
         ))
+    def equalized_sound_player_clicked(self):
+        self.equalized_sound_player = Player(self.signal, mode='fft')
+        self.equalized_sound_player.start()
+        self.equalized_sound_player.join()
+            
+
+    def original_sound_player_clicked(self):
+        if self.original_sound_player.is_playing == False:
+            self.original_sound_player.play()
+        else:
+            self.original_sound_player.pause()
+            
 
     def range_slider(self, w_type, value, freqs_range):
         self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
@@ -309,7 +323,9 @@ class MainApp(QMainWindow, ui):
         self.signal.import_signal(file_name, "stft")
 
         self.signal.signal_slices = animals_slices + musics_slices
-
+        self.original_sound_player = Player(self.signal, mode='fft')
+        self.original_sound_player.start()
+        self.original_sound_player.pause()
         self.original_signal_viewer.clear()
         self.equalized_signal_viewer.clear()
         self.frequency_plot_widget.clear()
