@@ -182,52 +182,52 @@ class MainApp(QMainWindow, ui):
         # uniform sliders########################################################################################
         self.uniform_slider_1.valueChanged.connect(lambda: self.range_slider('rectangle',
                                                                              self.uniform_slider_1.value(),
-                                                                             (0, 2000),
+                                                                             (0, 200),
                                                                              )
                                                    )
         self.uniform_slider_2.valueChanged.connect(lambda: self.range_slider('rectangle',
                                                                              self.uniform_slider_2.value(),
-                                                                             (2000, 4000),
+                                                                             (200, 400),
                                                                              )
                                                    )
         self.uniform_slider_3.valueChanged.connect(lambda: self.range_slider('rectangle',
                                                                              self.uniform_slider_3.value(),
-                                                                             (4000, 6000),
+                                                                             (400, 600),
                                                                              )
                                                    )
         self.uniform_slider_4.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_4.value(),
-                                                                             (6000, 8000),
+                                                                             (600, 800),
                                                                              )
                                                    )
         self.uniform_slider_5.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_5.value(),
-                                                                             (8000, 10000),
+                                                                             (800, 1000),
                                                                              )
                                                    )
         self.uniform_slider_6.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_6.value(),
-                                                                             (10000, 12000),
+                                                                             (1000, 1200),
                                                                              )
                                                    )
         self.uniform_slider_7.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_7.value(),
-                                                                             (12000, 14000),
+                                                                             (1200, 1400),
                                                                              )
                                                    )
         self.uniform_slider_8.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_8.value(),
-                                                                             (14000, 16000),
+                                                                             (1400, 1600),
                                                                              )
                                                    )
         self.uniform_slider_9.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                              self.uniform_slider_9.value(),
-                                                                             (16000, 18000),
+                                                                             (1600, 1800),
                                                                              )
                                                    )
         self.uniform_slider_10.valueChanged.connect(lambda: self.range_slider('hamming',
                                                                               self.uniform_slider_10.value(),
-                                                                              (18000, 20000),
+                                                                              (1800, 2000),
                                                                               )
                                                     )
         # animals sliders #################################################################
@@ -277,6 +277,14 @@ class MainApp(QMainWindow, ui):
             self.trumpet_slider.value(),
             'trumpet'
         ))
+
+
+        self.ecg_arrhythmia1_slider.valueChanged.connect(lambda: self.range_slider('rectangle',
+                                                                             self.ecg_arrhythmia1_slider.value(),
+                                                                             (1600, 1800),
+                                                                             )
+        )
+
     def equalized_sound_player_clicked(self):
         self.equalized_sound_player = Player(self.signal, mode='fft')
         self.equalized_sound_player.start()
