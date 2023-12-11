@@ -83,6 +83,7 @@ class MainApp(QMainWindow, ui):
         # self.play_pause_equalized_sound_state = False
         self.original_sound_player = None
         self.equalized_sound_player = None
+        self.ecg_mode_selected = False
 
         # original signal
         self.original_plot_widget = pg.PlotWidget(self.original_graphics_view)
@@ -281,7 +282,7 @@ class MainApp(QMainWindow, ui):
 
         self.ecg_arrhythmia1_slider.valueChanged.connect(lambda: self.range_slider('rectangle',
                                                                              self.ecg_arrhythmia1_slider.value(),
-                                                                             (1600, 1800),
+                                                                             (20, 90),
                                                                              )
         )
 
@@ -298,7 +299,7 @@ class MainApp(QMainWindow, ui):
             self.original_sound_player.pause()
             
 
-    def range_slider(self, w_type, value, freqs_range):
+    def range_slider(self, w_type, value, freqs_range, nslider=None):
         self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
         self.equalized_signal_viewer.clear()
         self.equalized_signal_viewer.load_dataset(self.signal.signal_ifft)
@@ -310,6 +311,7 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
         self.equalized_spectro_plot_widget.clear()
         plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+
 
     def slice_slider(self, w_type, value, name):
         self.signal.equalize(w_type, value / 50, slice_name=name)
@@ -327,8 +329,12 @@ class MainApp(QMainWindow, ui):
     def open_signal(self):
         options = QFileDialog.Options()
         file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
-                                                   'wav Files (*.wav)', options=options)
-        self.signal.import_signal(file_name, "stft")
+                                                   '*', options=options)
+        if self.ecg_mode_selected == False:
+            self.signal.import_signal(file_name, "stft")
+        else:
+            self.signal.import_signal(file_name, "ecg")
+
 
         self.signal.signal_slices = animals_slices + musics_slices
         self.original_sound_player = Player(self.signal, mode='fft')
@@ -417,6 +423,11 @@ class MainApp(QMainWindow, ui):
         for sliders_frame in self.sliders_frames:
             self.sliders_frames[sliders_frame].setVisible(False)
         self.sliders_frames[text].setVisible(True)
+        if text == 'ECG Mode':
+            self.ecg_mode_selected = True
+        else:
+            self.ecg_mode_selected = False
+        
 
     def show_hide_spectro_widget(self):
         if self._show_hide_flag:

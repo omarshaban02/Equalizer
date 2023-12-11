@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pyqtgraph as pg
 from threading import Thread
 from time import sleep
-
+import pandas as pd
 
 class SignalSlice(object):
     def __init__(self, name, freqs_indices=None, time_range=None):
@@ -457,32 +457,42 @@ class Signal(object):
             self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
 
     def import_signal(self, file, mode='fft'):
-        file = wave.open(file, "rb")
-        nframes = file.getnframes()
-        data = file.readframes(nframes)
-        self.original_signal = np.frombuffer(data, dtype=np.int16)
-        self.sampling_rate = file.getframerate()
-        self.sample_width = file.getsampwidth()
-        self.nchannels = file.getnchannels()
-        if mode == 'fft':
+
+        
+        if mode == 'fft' or mode == 'stft':
+            file = wave.open(file, "rb")
+            nframes = file.getnframes()
+            data = file.readframes(nframes)
+            self.original_signal = np.frombuffer(data, dtype=np.int16)
+            self.sampling_rate = file.getframerate()
+            self.sample_width = file.getsampwidth()
+            self.nchannels = file.getnchannels()
             self.mode = 'fft'
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
             self.signal_modified_amplitudes = np.abs(sig_fft)
             self.signal_modified_phases = np.angle(sig_fft)
+            if mode == 'stft':
+                self.mode = 'stft'
+                self.signal_stft = stft(self.original_signal, fs=self.sampling_rate)
+                self.signal_zxx = self.signal_stft[2]
+                self.signal_modified_zxx = self.signal_stft[2].copy()
+                self.n_time_segments = len(self.signal_stft[1])
 
-        elif mode == 'stft':
-            self.mode = 'stft'
+        elif mode == 'ecg':
+            data = pd.read_csv(file).to_numpy()
+            self.original_signal = data.transpose()[1]
+            Ts = data.transpose()[0][1]-data.transpose()[0][0]
+            self.sampling_rate = int(1/Ts)
+            print(self.original_signal)
+            self.nchannels = 1
+            self.mode = 'ecg'
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
             self.signal_modified_amplitudes = np.abs(sig_fft)
             self.signal_modified_phases = np.angle(sig_fft)
-            self.signal_stft = stft(self.original_signal, fs=self.sampling_rate)
-            self.signal_zxx = self.signal_stft[2]
-            self.signal_modified_zxx = self.signal_stft[2].copy()
-            self.n_time_segments = len(self.signal_stft[1])
 
         else:
             raise ValueError('Invalid mode')
