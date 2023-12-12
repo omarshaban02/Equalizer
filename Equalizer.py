@@ -281,6 +281,7 @@ class Signal(object):
     @signal_amplitudes.setter
     def signal_amplitudes(self, value):
         self._signal_amplitudes = value
+
     @property
     def signal_modified_amplitudes(self):
         return self._signal_modified_amplitudes
@@ -295,7 +296,8 @@ class Signal(object):
 
     @signal_phases.setter
     def signal_phases(self, value):
-       self._signal_phases = value
+        self._signal_phases = value
+
     @property
     def signal_modified_phases(self):
         return self._signal_modified_phases
@@ -376,6 +378,7 @@ class Signal(object):
     @signal_zxx.setter
     def signal_zxx(self, value):
         self._signal_zxx = value
+
     @property
     def signal_modified_zxx(self):
         return self._signal_modified_zxx
@@ -383,9 +386,6 @@ class Signal(object):
     @signal_modified_zxx.setter
     def signal_modified_zxx(self, value):
         self._signal_modified_zxx = value
-        
-        
-        
 
     def equalize(self, window_type, equalizing_factor, freqs_range=None, slice_name=None):
         # apply stft
@@ -412,10 +412,10 @@ class Signal(object):
                     if n_end < 0: n_end = -1
                     for i, w in zip(freqs_indices, window):
                         self.signal_modified_zxx[i, n_start:n_end] = w * self.signal_zxx[i, n_start:n_end]
-                    self.signal_modified_amplitudes = np.abs(fft(self.signal_istft)) 
-                    self.signal_modified_phases = np.angle(fft(self.signal_istft)) 
-                        
-        # apply fft
+                    self.signal_modified_amplitudes = np.abs(fft(self.signal_istft))
+                    self.signal_modified_phases = np.angle(fft(self.signal_istft))
+
+                    # apply fft
         if freqs_range is not None:
             f_start = freqs_range[0]
             f_end = freqs_range[1]
@@ -458,8 +458,6 @@ class Signal(object):
             self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
 
     def import_signal(self, file, mode='fft'):
-
-        
         if mode == 'fft' or mode == 'stft':
             file = wave.open(file, "rb")
             nframes = file.getnframes()
@@ -484,9 +482,9 @@ class Signal(object):
         elif mode == 'ecg':
             data = pd.read_csv(file).to_numpy()
             self.original_signal = data.transpose()[1]
-            Ts = data.transpose()[0][1]-data.transpose()[0][0]
-            self.sampling_rate = int(1/Ts)
-            print(self.original_signal)
+            Ts = data.transpose()[0][1] - data.transpose()[0][0]
+            self.sampling_rate = int(1 / Ts)
+            print(np.round(np.max(self.original_signal), 2))
             self.nchannels = 1
             self.mode = 'ecg'
             sig_fft = fft(self.original_signal)
