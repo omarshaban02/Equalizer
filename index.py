@@ -9,7 +9,7 @@ import numpy as np
 
 from PyQt5.uic import loadUiType
 
-from Equalizer import Signal,Player, animals_slices, musics_slices
+from Equalizer import Signal, Player, animals_slices, musics_slices
 import SignalViewer as sv
 
 ui, _ = loadUiType('main.ui')
@@ -79,8 +79,6 @@ class MainApp(QMainWindow, ui):
 
         # Flags
         self.play_pause_state = True
-        # self.play_pause_original_sound_state = False
-        # self.play_pause_equalized_sound_state = False
         self.original_sound_player = None
         self.equalized_sound_player = None
 
@@ -173,10 +171,13 @@ class MainApp(QMainWindow, ui):
         self.reset_view_btn.clicked.connect(self.set_home_view)
         self.zoom_in_btn.clicked.connect(self.zoom_in)
         self.zoom_out_btn.clicked.connect(self.zoom_out)
+
         self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
         self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
+
         self.original_sound_btn.clicked.connect(self.original_sound_player_clicked)
         self.equalized_sound_btn.clicked.connect(self.equalized_sound_player_clicked)
+
         self.window_comboBox.currentTextChanged.connect(self.update_smoothing_window)
 
         # uniform sliders########################################################################################
@@ -278,25 +279,22 @@ class MainApp(QMainWindow, ui):
             'trumpet'
         ))
 
-
         self.ecg_arrhythmia1_slider.valueChanged.connect(lambda: self.range_slider('rectangle',
-                                                                             self.ecg_arrhythmia1_slider.value(),
-                                                                             (1600, 1800),
-                                                                             )
-        )
+                                                                                   self.ecg_arrhythmia1_slider.value(),
+                                                                                   (1600, 1800),
+                                                                                   )
+                                                         )
 
     def equalized_sound_player_clicked(self):
         self.equalized_sound_player = Player(self.signal, mode='fft')
         self.equalized_sound_player.start()
         self.equalized_sound_player.join()
-            
 
     def original_sound_player_clicked(self):
-        if self.original_sound_player.is_playing == False:
+        if not self.original_sound_player.is_playing:
             self.original_sound_player.play()
         else:
             self.original_sound_player.pause()
-            
 
     def range_slider(self, w_type, value, freqs_range):
         self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
@@ -341,9 +339,12 @@ class MainApp(QMainWindow, ui):
         self.equalized_spectro_plot_widget.clear()
 
         self.original_signal_viewer.load_dataset(self.signal.original_signal)
-        # self.equalized_signal_viewer.load_dataset(self.signal.original_signal)
+        self.equalized_signal_viewer.load_dataset(self.signal.original_signal)
         self.original_signal_viewer.add_signal()
-        # self.equalized_signal_viewer.add_signal()
+        self.equalized_signal_viewer.add_signal()
+
+        self.play_pause_state = True
+        self.play_pause_btn.setIcon(QIcon(f'icons/pause copy.svg'))
 
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
@@ -354,22 +355,22 @@ class MainApp(QMainWindow, ui):
         plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
 
     def play_pause(self):
-        if self.signal.original_signal:
+        if self.signal.original_signal.any():
             if self.play_pause_state:
                 self.original_signal_viewer.play()
                 self.equalized_signal_viewer.play()
-                self.play_pause_state = False
                 self.play_pause_btn.setIcon(QIcon(f'icons/pause copy.svg'))
+                self.play_pause_state = False
             else:
                 self.original_signal_viewer.pause()
                 self.equalized_signal_viewer.pause()
-                self.play_pause_state = True
                 self.play_pause_btn.setIcon(QIcon(f'icons/play copy.svg'))
+                self.play_pause_state = True
         else:
             QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
 
     def replay(self):
-        if self.signal.original_signal:
+        if self.signal.original_signal.any():
             self.original_signal_viewer.replay()
             self.equalized_signal_viewer.replay()
             self.play_pause_btn.setIcon(QIcon(f'icons/pause copy.svg'))
@@ -396,7 +397,7 @@ class MainApp(QMainWindow, ui):
         equalized_view_box.scaleBy(s=(1.1, 1.1))
 
     def stop(self):
-        if self.signal.original_signal:
+        if self.signal.original_signal.any():
             self.original_signal_viewer.replay()
             self.equalized_signal_viewer.replay()
             self.play_pause_btn.setIcon(QIcon(f'icons/play copy.svg'))
@@ -432,6 +433,8 @@ class MainApp(QMainWindow, ui):
 
     def update_smoothing_window(self, window):
         self.smoothing_window = window.lower()
+        if self.smoothing_window == "gaussian":
+            pass
 
     def change_slider_cursor(self, slider):
         slider.setCursor(Qt.ClosedHandCursor)

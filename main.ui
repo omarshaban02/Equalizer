@@ -494,12 +494,12 @@ border:none;</string>
          </property>
          <property name="icon">
           <iconset resource="res.qrc">
-           <normaloff>:/icons/icons/volume-slash.svg</normaloff>:/icons/icons/volume-slash.svg</iconset>
+           <normaloff>:/icons/icons/volume.svg</normaloff>:/icons/icons/volume.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
         </widget>
@@ -522,12 +522,12 @@ border:none;</string>
          </property>
          <property name="icon">
           <iconset resource="res.qrc">
-           <normaloff>:/icons/icons/volume-slash.svg</normaloff>:/icons/icons/volume-slash.svg</iconset>
+           <normaloff>:/icons/icons/volume.svg</normaloff>:/icons/icons/volume.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
         </widget>
@@ -854,7 +854,6 @@ border:none;</string>
           <font>
            <family>Ubuntu</family>
            <pointsize>-1</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>

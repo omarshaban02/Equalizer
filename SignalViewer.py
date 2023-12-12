@@ -83,8 +83,8 @@ class SignalViewerLogic(object):
         self.signal = None  # storing loaded signals from the file
         self._rate = 10  # samples per second
         self.timer.start(int(1000 / self._rate))  # The delay that the draw method takes for each call
-        self.view_width = 3e3  # initial width
-        self.view_height = 3.5e4  # initial height
+        self.view_width = 350e3  # initial width
+        self.view_height = 6e4  # initial height
         self._xRange = [0, self.view_width]
         self._yRange = [- self.view_height, self.view_height]
         self._display_axis = True
@@ -225,7 +225,7 @@ class SignalViewerLogic(object):
     # go to the home view
     def home_view(self, scrollBar1=None, scrollBar2=None) -> None:
         self.xRange = [0, self.view_width]
-        self.yRange = [0, self.view_height]
+        self.yRange = [- self.view_height, self.view_height]
 
     # apply the action on the active signals
     def play(self):
