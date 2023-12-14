@@ -95,23 +95,30 @@ class MainApp(QMainWindow, ui):
         self.original_graphics_view.setLayout(self.graphics_view_layout1)
         self.original_plot_widget.setObjectName("original_plot_widget")
 
-        self.original_signal_viewer = sv.SignalViewerLogic(self.original_plot_widget)
-        self.original_signal_viewer.view.setLabel("bottom", text="Frequency (Hz)")
-        self.original_signal_viewer.view.setLabel("left", text="Amplitude (mV)")
+        self.original_signal_viewer = sv.SignalViewerLogic(
+            self.original_plot_widget)
+        self.original_signal_viewer.view.setLabel(
+            "bottom", text="Frequency (Hz)")
+        self.original_signal_viewer.view.setLabel(
+            "left", text="Amplitude (mV)")
         self.original_signal_viewer.view.setTitle("Original Signal")
 
         self.original_signal_viewer.signal = self.original_signal_plot
 
         # equalized signal
-        self.equalized_plot_widget = pg.PlotWidget(self.equalized_graphics_view)
+        self.equalized_plot_widget = pg.PlotWidget(
+            self.equalized_graphics_view)
         self.graphics_view_layout1 = QHBoxLayout(self.equalized_graphics_view)
         self.graphics_view_layout1.addWidget(self.equalized_plot_widget)
         self.equalized_graphics_view.setLayout(self.graphics_view_layout1)
         self.equalized_plot_widget.setObjectName("equalized_plot_widget")
 
-        self.equalized_signal_viewer = sv.SignalViewerLogic(self.equalized_plot_widget)
-        self.equalized_signal_viewer.view.setLabel("bottom", text="Frequency (Hz)")
-        self.equalized_signal_viewer.view.setLabel("left", text="Amplitude (mV)")
+        self.equalized_signal_viewer = sv.SignalViewerLogic(
+            self.equalized_plot_widget)
+        self.equalized_signal_viewer.view.setLabel(
+            "bottom", text="Frequency (Hz)")
+        self.equalized_signal_viewer.view.setLabel(
+            "left", text="Amplitude (mV)")
         self.equalized_signal_viewer.view.setTitle("Equalized Signal")
 
         self.equalized_signal_viewer.signal = self.equalized_signal_plot
@@ -120,21 +127,30 @@ class MainApp(QMainWindow, ui):
         self.original_signal_viewer.linkTo(self.equalized_signal_viewer)
 
         # original signal spectrogram
-        self.original_spectro_plot_widget = pg.PlotWidget(self.original_spectro_graphics_view)
-        self.graphics_view_layout2 = QHBoxLayout(self.original_spectro_graphics_view)
+        self.original_spectro_plot_widget = pg.PlotWidget(
+            self.original_spectro_graphics_view)
+        self.graphics_view_layout2 = QHBoxLayout(
+            self.original_spectro_graphics_view)
         self.graphics_view_layout2.addWidget(self.original_spectro_plot_widget)
-        self.original_spectro_graphics_view.setLayout(self.graphics_view_layout2)
-        self.original_spectro_plot_widget.setObjectName("original_spectro_plot_widget")
+        self.original_spectro_graphics_view.setLayout(
+            self.graphics_view_layout2)
+        self.original_spectro_plot_widget.setObjectName(
+            "original_spectro_plot_widget")
         self.original_spectro_plot_widget.setBackground((25, 35, 45))
-        self.original_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
-        self.original_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
-        self.original_spectro_plot_widget.setTitle("Spectrogram for Original Signal")
+        self.original_spectro_plot_widget.setLabel(
+            "bottom", text="Frequency (Hz)")
+        self.original_spectro_plot_widget.setLabel(
+            "left", text="Amplitude (mV)")
+        self.original_spectro_plot_widget.setTitle(
+            "Spectrogram for Original Signal")
 
         self.original_spectro_plot_item = pg.ImageItem()
-        self.original_spectro_plot_item.setLookupTable(pg.colormap.get("viridis"))
+        self.original_spectro_plot_item.setLookupTable(
+            pg.colormap.get("viridis"))
 
         # frequency plot
-        self.frequency_plot_widget = pg.PlotWidget(self.frequency_graphics_view)
+        self.frequency_plot_widget = pg.PlotWidget(
+            self.frequency_graphics_view)
         self.graphics_view_layout3 = QHBoxLayout(self.frequency_graphics_view)
         self.graphics_view_layout3.addWidget(self.frequency_plot_widget)
         self.frequency_graphics_view.setLayout(self.graphics_view_layout3)
@@ -148,26 +164,38 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_item = pg.PlotDataItem()
 
         # equalized signal spectrogram
-        self.equalized_spectro_plot_widget = pg.PlotWidget(self.equalized_spectro_graphics_view)
-        self.graphics_view_mixer_layout = QHBoxLayout(self.equalized_spectro_graphics_view)
-        self.graphics_view_mixer_layout.addWidget(self.equalized_spectro_plot_widget)
-        self.equalized_spectro_graphics_view.setLayout(self.graphics_view_mixer_layout)
-        self.equalized_spectro_plot_widget.setObjectName("equalized_spectro_plot_widget")
+        self.equalized_spectro_plot_widget = pg.PlotWidget(
+            self.equalized_spectro_graphics_view)
+        self.graphics_view_mixer_layout = QHBoxLayout(
+            self.equalized_spectro_graphics_view)
+        self.graphics_view_mixer_layout.addWidget(
+            self.equalized_spectro_plot_widget)
+        self.equalized_spectro_graphics_view.setLayout(
+            self.graphics_view_mixer_layout)
+        self.equalized_spectro_plot_widget.setObjectName(
+            "equalized_spectro_plot_widget")
         self.equalized_spectro_plot_widget.setBackground((25, 35, 45))
-        self.equalized_spectro_plot_widget.setLabel("bottom", text="Frequency (Hz)")
-        self.equalized_spectro_plot_widget.setLabel("left", text="Amplitude (mV)")
-        self.equalized_spectro_plot_widget.setTitle("Spectrogram for Equalized Signal")
+        self.equalized_spectro_plot_widget.setLabel(
+            "bottom", text="Frequency (Hz)")
+        self.equalized_spectro_plot_widget.setLabel(
+            "left", text="Amplitude (mV)")
+        self.equalized_spectro_plot_widget.setTitle(
+            "Spectrogram for Equalized Signal")
 
         self.equalized_spectro_plot_item = pg.ImageItem()
-        self.equalized_spectro_plot_item.setLookupTable(pg.colormap.get("viridis"))
+        self.equalized_spectro_plot_item.setLookupTable(
+            pg.colormap.get("viridis"))
 
         # ------------------------------- signals and slots --------------------------------------
         self.show_hide_btn.clicked.connect(self.show_hide_spectro_widget)
 
-        self.speed_slider.sliderPressed.connect(lambda: self.change_slider_cursor(self.speed_slider))
-        self.speed_slider.sliderReleased.connect(lambda: self.reset_slider_cursor(self.speed_slider))
+        self.speed_slider.sliderPressed.connect(
+            lambda: self.change_slider_cursor(self.speed_slider))
+        self.speed_slider.sliderReleased.connect(
+            lambda: self.reset_slider_cursor(self.speed_slider))
 
-        self.mode_comboBox.currentTextChanged.connect(self.change_sliders_for_modes)
+        self.mode_comboBox.currentTextChanged.connect(
+            self.change_sliders_for_modes)
 
         self.open_btn.clicked.connect(self.open_signal)
 
@@ -178,63 +206,78 @@ class MainApp(QMainWindow, ui):
         self.zoom_in_btn.clicked.connect(self.zoom_in)
         self.zoom_out_btn.clicked.connect(self.zoom_out)
 
-        self.speed_slider.valueChanged.connect(lambda: self.change_speed(self.speed_slider.value()))
-        self.speed_slider.valueChanged.connect(lambda: self.speed_lcd.display(self.speed_slider.value()))
+        self.speed_slider.valueChanged.connect(
+            lambda: self.change_speed(self.speed_slider.value()))
+        self.speed_slider.valueChanged.connect(
+            lambda: self.speed_lcd.display(self.speed_slider.value()))
 
-        self.original_sound_btn.clicked.connect(self.original_sound_player_clicked)
-        self.equalized_sound_btn.clicked.connect(self.equalized_sound_player_clicked)
+        self.original_sound_btn.clicked.connect(
+            self.original_sound_player_clicked)
+        self.equalized_sound_btn.clicked.connect(
+            self.equalized_sound_player_clicked)
 
-        self.window_comboBox.currentTextChanged.connect(self.update_smoothing_window)
+        self.window_comboBox.currentTextChanged.connect(
+            self.update_smoothing_window)
 
         # uniform sliders########################################################################################
         self.uniform_slider_1.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_1.value(),
-                                                                                    freqs_range=(0, 200),
+                                                                                    freqs_range=(
+                                                                                        0, 200),
                                                                                     )
                                                    )
         self.uniform_slider_2.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_2.value(),
-                                                                                    freqs_range=(200, 400),
+                                                                                    freqs_range=(
+                                                                                        200, 400),
                                                                                     )
                                                    )
         self.uniform_slider_3.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_3.value(),
-                                                                                    freqs_range=(400, 600),
+                                                                                    freqs_range=(
+                                                                                        400, 600),
                                                                                     )
                                                    )
         self.uniform_slider_4.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_4.value(),
-                                                                                    freqs_range=(600, 800),
+                                                                                    freqs_range=(
+                                                                                        600, 800),
                                                                                     )
                                                    )
         self.uniform_slider_5.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_5.value(),
-                                                                                    freqs_range=(800, 1000),
+                                                                                    freqs_range=(
+                                                                                        800, 1000),
                                                                                     )
                                                    )
         self.uniform_slider_6.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_6.value(),
-                                                                                    freqs_range=(1000, 1200),
+                                                                                    freqs_range=(
+                                                                                        1000, 1200),
                                                                                     )
                                                    )
         self.uniform_slider_7.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_7.value(),
-                                                                                    freqs_range=(1200, 1400),
+                                                                                    freqs_range=(
+                                                                                        1200, 1400),
                                                                                     )
                                                    )
         self.uniform_slider_8.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_8.value(),
-                                                                                    freqs_range=(1400, 1600),
+                                                                                    freqs_range=(
+                                                                                        1400, 1600),
                                                                                     )
                                                    )
         self.uniform_slider_9.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                     self.uniform_slider_9.value(),
-                                                                                    freqs_range=(1600, 1800),
+                                                                                    freqs_range=(
+                                                                                        1600, 1800),
                                                                                     )
                                                    )
         self.uniform_slider_10.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
                                                                                      self.uniform_slider_10.value(),
-                                                                                     freqs_range=(1800, 2000),
+                                                                                     freqs_range=(
+                                                                                         1800, 2000),
                                                                                      )
                                                     )
         # animals sliders #################################################################
@@ -287,7 +330,7 @@ class MainApp(QMainWindow, ui):
 
         self.p_wave_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
                                                                                      self.p_wave_arrhythmia_slider.value(),
-                                                                                     (20, 90), 1
+                                                                                     (20, 60), 1
                                                                                      )
                                                            )
         self.sv_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
@@ -324,29 +367,32 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
         self.equalized_spectro_plot_widget.clear()
-        plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+        plot_spectrogram(self.equalized_spectro_plot_widget,
+                         self.signal.equalized_signal_spectrogram)
 
     def equalize_by_sliders(self, w_type, value, freqs_range=None, slice_name=None):
         if freqs_range:
-            self.signal.equalize(w_type, value / 100, freqs_range=freqs_range)
+            self.signal.equalize(w_type, value / 500, freqs_range=freqs_range)
             self.reload_after_equalizing(self.signal.signal_ifft)
         elif slice_name:
-            self.signal.equalize(w_type, value / 100, slice_name=slice_name)
+            self.signal.equalize(w_type, value / 500, slice_name=slice_name)
             self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self, w_type, value, freqs_range, n_slider=1):
         peak = np.round(np.max(self.signal.original_signal), 2)
         if self.ecg_mode_selected:
             if peak == self.ecg_arrs_max_f_dict["p wave"] and n_slider == 1:
-                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.signal.equalize(w_type, value / 500,
+                                     freqs_range=freqs_range)
                 self.reload_after_equalizing(self.signal.signal_ifft)
             elif peak == self.ecg_arrs_max_f_dict["sv"] and n_slider == 2:
-                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.signal.equalize(w_type, value / 500,
+                                     freqs_range=freqs_range)
                 self.reload_after_equalizing(self.signal.signal_ifft)
             elif peak == self.ecg_arrs_max_f_dict["nr"] and n_slider == 3:
-                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.signal.equalize(w_type, value / 500,
+                                     freqs_range=freqs_range)
                 self.reload_after_equalizing(self.signal.signal_ifft)
-
 
     def open_signal(self):
         options = QFileDialog.Options()
@@ -379,9 +425,11 @@ class MainApp(QMainWindow, ui):
                                          np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
-        plot_spectrogram(self.original_spectro_plot_widget, self.signal.original_signal_spectrogram)
+        plot_spectrogram(self.original_spectro_plot_widget,
+                         self.signal.original_signal_spectrogram)
 
-        plot_spectrogram(self.equalized_spectro_plot_widget, self.signal.equalized_signal_spectrogram)
+        plot_spectrogram(self.equalized_spectro_plot_widget,
+                         self.signal.equalized_signal_spectrogram)
 
     def play_pause(self):
         if self.signal.original_signal.any():
@@ -396,7 +444,8 @@ class MainApp(QMainWindow, ui):
                 self.play_pause_btn.setIcon(QIcon(f'icons/play copy.svg'))
                 self.play_pause_state = True
         else:
-            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+            QMessageBox.critical(
+                None, "Error", "There is no signal opened", QMessageBox.Ok)
 
     def replay(self):
         if self.signal.original_signal.any():
@@ -407,7 +456,8 @@ class MainApp(QMainWindow, ui):
             self.original_signal_viewer.home_view()
             self.equalized_signal_viewer.home_view()
         else:
-            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+            QMessageBox.critical(
+                None, "Error", "There is no signal opened", QMessageBox.Ok)
 
     def set_home_view(self):
         if self.ecg_mode_selected:
@@ -442,7 +492,8 @@ class MainApp(QMainWindow, ui):
             self.original_signal_viewer.home_view()
             self.equalized_signal_viewer.home_view()
         else:
-            QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
+            QMessageBox.critical(
+                None, "Error", "There is no signal opened", QMessageBox.Ok)
 
     def change_speed(self, new_speed):
         if new_speed:
