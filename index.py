@@ -18,8 +18,9 @@ ui, _ = loadUiType('main.ui')
 def plot_spectrogram(widget, sxx):
     # Plot Spectrogram
     img = pg.ImageItem()
-    img.setImage(sxx)
+    img.setImage(np.rot90(sxx))
     widget.addItem(img)
+    widget.setYRange(0, 5 * np.log10(np.max(sxx)))
 
     # Set colormap
     colormap = pg.colormap.get('viridis')
@@ -55,23 +56,55 @@ class MainApp(QMainWindow, ui):
             self.sliders_frames[sliders_frame].setVisible(False)
         self.sliders_frames["Uniform Mode"].setVisible(True)
 
-        self.uniform_sliders = [
-            self.uniform_slider_1, self.uniform_slider_2, self.uniform_slider_3, self.uniform_slider_4,
-            self.uniform_slider_5, self.uniform_slider_6, self.uniform_slider_7, self.uniform_slider_8,
-            self.uniform_slider_9, self.uniform_slider_10
-        ]
 
-        self.animal_sliders = [
+        self.ranges_sliders = {
+            self.uniform_slider_1: (0, 200),
+            self.uniform_slider_2: (200, 400),
+            self.uniform_slider_3: (400, 600),
+            self.uniform_slider_4: (600, 800),
+            self.uniform_slider_5: (800, 1000),
+            self.uniform_slider_6: (1000, 1200),
+            self.uniform_slider_7: (1200, 1400),
+            self.uniform_slider_8: (1400, 1600),
+            self.uniform_slider_9: (1600, 1800),
+            self.uniform_slider_10: (1800, 2000),
 
-        ]
+            self.p_wave_arrhythmia_slider: (20, 60),
+            self.sv_arrhythmia_slider: (30, 90),
+            self.nr_arrhythmia_slider: (5, 60)
+        }
+        self.slices_sliders = {
+            self.wolf_slider: "wolf",
+            self.horse_slider: "horse",
+            self.cow_slider: "cow",
+            self.dolphin_slider: "dolphin",
+            self.elephant_slider: "elephant",
 
-        self.musical_sliders = [
+            self.trumpet_slider: "trumpet",
+            self.piano_slider: "piano",
+            self.guitar_slider: "guitar",
+            self.flute_slider: "flute",
+        }
 
-        ]
-
-        self.ecg_sliders = [
-
-        ]
+        # self.uniform_sliders = [
+        #     self.uniform_slider_1, self.uniform_slider_2, self.uniform_slider_3, self.uniform_slider_4,
+        #     self.uniform_slider_5, self.uniform_slider_6, self.uniform_slider_7, self.uniform_slider_8,
+        #     self.uniform_slider_9, self.uniform_slider_10
+        # ]
+        # self.animal_sliders = [
+        #
+        # ]
+        #
+        # self.musical_sliders = [
+        #
+        # ]
+        #
+        # self.ecg_sliders = [
+        #
+        # ]
+        # self.sliders = [
+        #     self.uniform_sliders, self.animal_sliders, self.musical_sliders, self.ecg_sliders
+        # ]
 
         self.ecg_arrs_max_f_dict = {
             "p wave": 0.96,
@@ -79,9 +112,7 @@ class MainApp(QMainWindow, ui):
             "nr": 0.39
         }
 
-        self.sliders = [
-            self.uniform_sliders, self.animal_sliders, self.musical_sliders, self.ecg_sliders
-        ]
+
         # Flags
         self.play_pause_state = True
         self.original_sound_player = None
@@ -98,9 +129,9 @@ class MainApp(QMainWindow, ui):
         self.original_signal_viewer = sv.SignalViewerLogic(
             self.original_plot_widget)
         self.original_signal_viewer.view.setLabel(
-            "bottom", text="Frequency (Hz)")
+            "bottom", text="Time (sec)")
         self.original_signal_viewer.view.setLabel(
-            "left", text="Amplitude (mV)")
+            "left", text="Amplitude")
         self.original_signal_viewer.view.setTitle("Original Signal")
 
         self.original_signal_viewer.signal = self.original_signal_plot
@@ -116,9 +147,9 @@ class MainApp(QMainWindow, ui):
         self.equalized_signal_viewer = sv.SignalViewerLogic(
             self.equalized_plot_widget)
         self.equalized_signal_viewer.view.setLabel(
-            "bottom", text="Frequency (Hz)")
+            "bottom", text="Time (sec)")
         self.equalized_signal_viewer.view.setLabel(
-            "left", text="Amplitude (mV)")
+            "left", text="Amplitude")
         self.equalized_signal_viewer.view.setTitle("Equalized Signal")
 
         self.equalized_signal_viewer.signal = self.equalized_signal_plot
@@ -138,9 +169,9 @@ class MainApp(QMainWindow, ui):
             "original_spectro_plot_widget")
         self.original_spectro_plot_widget.setBackground((25, 35, 45))
         self.original_spectro_plot_widget.setLabel(
-            "bottom", text="Frequency (Hz)")
+            "bottom", text="Time Segment")
         self.original_spectro_plot_widget.setLabel(
-            "left", text="Amplitude (mV)")
+            "left", text="Frequency (Hz)")
         self.original_spectro_plot_widget.setTitle(
             "Spectrogram for Original Signal")
 
@@ -158,7 +189,7 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_widget.showGrid(x=True, y=True)
         self.frequency_plot_widget.setBackground((25, 35, 45))
         self.frequency_plot_widget.setLabel("bottom", text="Frequency (Hz)")
-        self.frequency_plot_widget.setLabel("left", text="Amplitude (mV)")
+        self.frequency_plot_widget.setLabel("left", text="Amplitude (dB)")
         self.frequency_plot_widget.setTitle("Frequency Signal")
 
         self.frequency_plot_item = pg.PlotDataItem()
@@ -176,9 +207,9 @@ class MainApp(QMainWindow, ui):
             "equalized_spectro_plot_widget")
         self.equalized_spectro_plot_widget.setBackground((25, 35, 45))
         self.equalized_spectro_plot_widget.setLabel(
-            "bottom", text="Frequency (Hz)")
+            "bottom", text="Time Segment")
         self.equalized_spectro_plot_widget.setLabel(
-            "left", text="Amplitude (mV)")
+            "left", text="Frequency (Hz)")
         self.equalized_spectro_plot_widget.setTitle(
             "Spectrogram for Equalized Signal")
 
@@ -220,129 +251,136 @@ class MainApp(QMainWindow, ui):
             self.update_smoothing_window)
 
         # uniform sliders########################################################################################
-        self.uniform_slider_1.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_1.value(),
-                                                                                    freqs_range=(
-                                                                                        0, 200),
-                                                                                    )
-                                                   )
-        self.uniform_slider_2.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_2.value(),
-                                                                                    freqs_range=(
-                                                                                        200, 400),
-                                                                                    )
-                                                   )
-        self.uniform_slider_3.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_3.value(),
-                                                                                    freqs_range=(
-                                                                                        400, 600),
-                                                                                    )
-                                                   )
-        self.uniform_slider_4.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_4.value(),
-                                                                                    freqs_range=(
-                                                                                        600, 800),
-                                                                                    )
-                                                   )
-        self.uniform_slider_5.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_5.value(),
-                                                                                    freqs_range=(
-                                                                                        800, 1000),
-                                                                                    )
-                                                   )
-        self.uniform_slider_6.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_6.value(),
-                                                                                    freqs_range=(
-                                                                                        1000, 1200),
-                                                                                    )
-                                                   )
-        self.uniform_slider_7.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_7.value(),
-                                                                                    freqs_range=(
-                                                                                        1200, 1400),
-                                                                                    )
-                                                   )
-        self.uniform_slider_8.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_8.value(),
-                                                                                    freqs_range=(
-                                                                                        1400, 1600),
-                                                                                    )
-                                                   )
-        self.uniform_slider_9.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                    self.uniform_slider_9.value(),
-                                                                                    freqs_range=(
-                                                                                        1600, 1800),
-                                                                                    )
-                                                   )
-        self.uniform_slider_10.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                                     self.uniform_slider_10.value(),
-                                                                                     freqs_range=(
-                                                                                         1800, 2000),
-                                                                                     )
-                                                    )
-        # animals sliders #################################################################
-        self.elephant_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.elephant_slider.value(),
-            slice_name='elephant'
-        ))
-        self.dolphin_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.dolphin_slider.value(),
-            slice_name='dolphin'
-        ))
-        self.cow_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.cow_slider.value(),
-            slice_name='cow'
-        ))
-        self.horse_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.horse_slider.value(),
-            slice_name='horse'
-        ))
-        self.wolf_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.wolf_slider.value(),
-            slice_name='wolf'
-        ))
-        # musics sliders #################################################################
-        self.flute_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.flute_slider.value(),
-            slice_name='flute'
-        ))
-        self.guitar_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.guitar_slider.value(),
-            slice_name='guitar'
-        ))
-        self.piano_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.piano_slider.value(),
-            slice_name='piano'
-        ))
-        self.trumpet_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
-            self.smoothing_window,
-            self.trumpet_slider.value(),
-            slice_name='trumpet'
-        ))
 
-        self.p_wave_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
-                                                                                     self.p_wave_arrhythmia_slider.value(),
-                                                                                     (20, 60), 1
-                                                                                     )
-                                                           )
-        self.sv_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
-                                                                                 self.sv_arrhythmia_slider.value(),
-                                                                                 (30, 90), 2
-                                                                                 )
-                                                       )
-        self.nr_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
-                                                                                 self.nr_arrhythmia_slider.value(),
-                                                                                 (5, 60), 3
-                                                                                 )
-                                                       )
+        for range_slider in self.ranges_sliders.keys():
+            range_slider.valueChanged.connect(self.equalize_by_sliders)
+
+        for slices_slider in self.slices_sliders.keys():
+            slices_slider.valueChanged.connect(self.equalize_by_sliders)
+
+        # self.uniform_slider_1.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_1.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 0, 200),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_2.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_2.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 200, 400),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_3.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_3.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 400, 600),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_4.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_4.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 600, 800),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_5.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_5.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 800, 1000),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_6.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_6.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 1000, 1200),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_7.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_7.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 1200, 1400),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_8.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_8.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 1400, 1600),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_9.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                             self.uniform_slider_9.value(),
+        #                                                                             freqs_range=(
+        #                                                                                 1600, 1800),
+        #                                                                             )
+        #                                            )
+        # self.uniform_slider_10.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
+        #                                                                              self.uniform_slider_10.value(),
+        #                                                                              freqs_range=(
+        #                                                                                  1800, 2000),
+        #                                                                              )
+        #                                             )
+        # animals sliders #################################################################
+        # self.elephant_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.elephant_slider.value(),
+        #     slice_name='elephant'
+        # ))
+        # self.dolphin_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.dolphin_slider.value(),
+        #     slice_name='dolphin'
+        # ))
+        # self.cow_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.cow_slider.value(),
+        #     slice_name='cow'
+        # ))
+        # self.horse_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.horse_slider.value(),
+        #     slice_name='horse'
+        # ))
+        # self.wolf_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.wolf_slider.value(),
+        #     slice_name='wolf'
+        # ))
+        # # musics sliders #################################################################
+        # self.flute_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.flute_slider.value(),
+        #     slice_name='flute'
+        # ))
+        # self.guitar_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.guitar_slider.value(),
+        #     slice_name='guitar'
+        # ))
+        # self.piano_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.piano_slider.value(),
+        #     slice_name='piano'
+        # ))
+        # self.trumpet_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
+        #     self.smoothing_window,
+        #     self.trumpet_slider.value(),
+        #     slice_name='trumpet'
+        # ))
+        #
+        # self.p_wave_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
+        #                                                                              self.p_wave_arrhythmia_slider.value(),
+        #                                                                              (20, 60), 1
+        #                                                                              )
+        #                                                    )
+        # self.sv_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
+        #                                                                          self.sv_arrhythmia_slider.value(),
+        #                                                                          (30, 90), 2
+        #                                                                          )
+        #                                                )
+        # self.nr_arrhythmia_slider.valueChanged.connect(lambda: self.ecg_equalize(self.smoothing_window,
+        #                                                                          self.nr_arrhythmia_slider.value(),
+        #                                                                          (5, 60), 3
+        #                                                                          )
+        #                                                )
 
     def equalized_sound_player_clicked(self):
         self.equalized_sound_player = Player(self.signal, mode='fft')
@@ -370,12 +408,12 @@ class MainApp(QMainWindow, ui):
         plot_spectrogram(self.equalized_spectro_plot_widget,
                          self.signal.equalized_signal_spectrogram)
 
-    def equalize_by_sliders(self, w_type, value, freqs_range=None, slice_name=None):
-        if freqs_range:
-            self.signal.equalize(w_type, value / 500, freqs_range=freqs_range)
+    def equalize_by_sliders(self):
+        if self.sender() in self.ranges_sliders.keys():
+            self.signal.equalize(self.smoothing_window, self.sender().value() / 500, freqs_range=self.ranges_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_ifft)
-        elif slice_name:
-            self.signal.equalize(w_type, value / 500, slice_name=slice_name)
+        elif self.sender() in self.slices_sliders.keys():
+            self.signal.equalize(self.smoothing_window, self.sender().value() / 500, slice_name=self.slices_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self, w_type, value, freqs_range, n_slider=1):
