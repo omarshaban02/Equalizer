@@ -76,7 +76,7 @@ class MainApp(QMainWindow, ui):
         self.ecg_arrs_max_f_dict = {
             "p wave": 0.96,
             "sv": 1.5,
-            "nr": 0
+            "nr": 0.39
         }
 
         self.sliders = [
@@ -193,49 +193,49 @@ class MainApp(QMainWindow, ui):
                                                                                     )
                                                    )
         self.uniform_slider_2.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_2.value(),
-                                                                             freqs_range=(200, 400),
-                                                                             )
+                                                                                    self.uniform_slider_2.value(),
+                                                                                    freqs_range=(200, 400),
+                                                                                    )
                                                    )
         self.uniform_slider_3.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_3.value(),
-                                                                             freqs_range=(400, 600),
-                                                                             )
+                                                                                    self.uniform_slider_3.value(),
+                                                                                    freqs_range=(400, 600),
+                                                                                    )
                                                    )
         self.uniform_slider_4.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_4.value(),
-                                                                             freqs_range=(600, 800),
-                                                                             )
+                                                                                    self.uniform_slider_4.value(),
+                                                                                    freqs_range=(600, 800),
+                                                                                    )
                                                    )
         self.uniform_slider_5.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_5.value(),
-                                                                             freqs_range=(800, 1000),
-                                                                             )
+                                                                                    self.uniform_slider_5.value(),
+                                                                                    freqs_range=(800, 1000),
+                                                                                    )
                                                    )
         self.uniform_slider_6.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_6.value(),
-                                                                             freqs_range=(1000, 1200),
-                                                                             )
+                                                                                    self.uniform_slider_6.value(),
+                                                                                    freqs_range=(1000, 1200),
+                                                                                    )
                                                    )
         self.uniform_slider_7.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_7.value(),
-                                                                             freqs_range=(1200, 1400),
-                                                                             )
+                                                                                    self.uniform_slider_7.value(),
+                                                                                    freqs_range=(1200, 1400),
+                                                                                    )
                                                    )
         self.uniform_slider_8.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_8.value(),
-                                                                             freqs_range=(1400, 1600),
-                                                                             )
+                                                                                    self.uniform_slider_8.value(),
+                                                                                    freqs_range=(1400, 1600),
+                                                                                    )
                                                    )
         self.uniform_slider_9.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                             self.uniform_slider_9.value(),
-                                                                             freqs_range=(1600, 1800),
-                                                                             )
+                                                                                    self.uniform_slider_9.value(),
+                                                                                    freqs_range=(1600, 1800),
+                                                                                    )
                                                    )
         self.uniform_slider_10.valueChanged.connect(lambda: self.equalize_by_sliders(self.smoothing_window,
-                                                                              self.uniform_slider_10.value(),
-                                                                              freqs_range=(1800, 2000),
-                                                                              )
+                                                                                     self.uniform_slider_10.value(),
+                                                                                     freqs_range=(1800, 2000),
+                                                                                     )
                                                     )
         # animals sliders #################################################################
         self.elephant_slider.valueChanged.connect(lambda: self.equalize_by_sliders(
@@ -312,9 +312,9 @@ class MainApp(QMainWindow, ui):
         else:
             self.original_sound_player.pause()
 
-    def reload_after_equalizing(self):
+    def reload_after_equalizing(self, ift):
         self.equalized_signal_viewer.clear()
-        self.equalized_signal_viewer.load_dataset(self.signal.signal_istft)
+        self.equalized_signal_viewer.load_dataset(ift)
         self.equalized_signal_viewer.add_signal()
 
         self.frequency_plot_widget.clear()
@@ -328,21 +328,25 @@ class MainApp(QMainWindow, ui):
 
     def equalize_by_sliders(self, w_type, value, freqs_range=None, slice_name=None):
         if freqs_range:
-            self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+            self.signal.equalize(w_type, value / 100, freqs_range=freqs_range)
+            self.reload_after_equalizing(self.signal.signal_ifft)
         elif slice_name:
-            self.signal.equalize(w_type, value / 50, slice_name=slice_name)
-        self.reload_after_equalizing()
+            self.signal.equalize(w_type, value / 100, slice_name=slice_name)
+            self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self, w_type, value, freqs_range, n_slider=1):
         peak = np.round(np.max(self.signal.original_signal), 2)
         if self.ecg_mode_selected:
             if peak == self.ecg_arrs_max_f_dict["p wave"] and n_slider == 1:
-                self.signal.equalize(w_type, value / 50, freqs_range)
+                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.reload_after_equalizing(self.signal.signal_ifft)
             elif peak == self.ecg_arrs_max_f_dict["sv"] and n_slider == 2:
-                self.signal.equalize(w_type, value / 50, freqs_range)
+                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.reload_after_equalizing(self.signal.signal_ifft)
             elif peak == self.ecg_arrs_max_f_dict["nr"] and n_slider == 3:
-                self.signal.equalize(w_type, value / 50, freqs_range)
-        self.reload_after_equalizing()
+                self.signal.equalize(w_type, value / 50, freqs_range=freqs_range)
+                self.reload_after_equalizing(self.signal.signal_ifft)
+
 
     def open_signal(self):
         options = QFileDialog.Options()
@@ -406,8 +410,14 @@ class MainApp(QMainWindow, ui):
             QMessageBox.critical(None, "Error", "There is no signal opened", QMessageBox.Ok)
 
     def set_home_view(self):
-        self.original_signal_viewer.home_view()
-        self.equalized_signal_viewer.home_view()
+        if self.ecg_mode_selected:
+            self.original_signal_viewer.xRange = [0, 1e3]
+            self.original_signal_viewer.yRange = [-2, 2]
+            self.equalized_signal_viewer.xRange = [0, 1e3]
+            self.equalized_signal_viewer.yRange = [-2, 2]
+        else:
+            self.original_signal_viewer.home_view()
+            self.equalized_signal_viewer.home_view()
 
     def zoom_in(self):
         original_view_box = self.original_plot_widget.getViewBox()
@@ -445,6 +455,10 @@ class MainApp(QMainWindow, ui):
         self.sliders_frames[text].setVisible(True)
         if text == 'ECG Mode':
             self.ecg_mode_selected = True
+            self.original_signal_viewer.xRange = [0, 1e3]
+            self.original_signal_viewer.yRange = [-2, 2]
+            self.equalized_signal_viewer.xRange = [0, 1e3]
+            self.equalized_signal_viewer.yRange = [-2, 2]
         else:
             self.ecg_mode_selected = False
 
