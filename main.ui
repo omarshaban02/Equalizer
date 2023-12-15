@@ -277,7 +277,7 @@ border:none;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5,1,5,4">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,8,1,7,4">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -441,22 +441,22 @@ border:none;
          </property>
          <item>
           <property name="text">
-           <string> Rectangle</string>
+           <string>Rectangle</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string> Hamming</string>
+           <string>Hamming</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string> Hanning</string>
+           <string>Hanning</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string> Gaussian</string>
+           <string>Gaussian</string>
           </property>
          </item>
         </widget>
@@ -494,12 +494,12 @@ border:none;</string>
          </property>
          <property name="icon">
           <iconset resource="res.qrc">
-           <normaloff>:/icons/icons/volume-slash.svg</normaloff>:/icons/icons/volume-slash.svg</iconset>
+           <normaloff>:/icons/icons/volume.svg</normaloff>:/icons/icons/volume.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
         </widget>
@@ -522,12 +522,12 @@ border:none;</string>
          </property>
          <property name="icon">
           <iconset resource="res.qrc">
-           <normaloff>:/icons/icons/volume-slash.svg</normaloff>:/icons/icons/volume-slash.svg</iconset>
+           <normaloff>:/icons/icons/volume.svg</normaloff>:/icons/icons/volume.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
         </widget>
@@ -854,7 +854,6 @@ border:none;</string>
           <font>
            <family>Ubuntu</family>
            <pointsize>-1</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1082,13 +1081,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1185,13 +1187,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1273,13 +1278,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1358,13 +1366,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1446,13 +1457,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1543,13 +1557,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1628,10 +1645,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1734,13 +1757,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1816,13 +1842,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1898,13 +1927,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1980,13 +2012,16 @@ border:none;</string>
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
                 </property>
                 <property name="pageStep">
-                 <number>1</number>
+                 <number>10</number>
                 </property>
                 <property name="value">
-                 <number>50</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -2059,69 +2094,222 @@ border:none;</string>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <layout class="QHBoxLayout" name="horizontalLayout_33">
           <item>
-           <widget class="QSlider" name="ecg_arrhythmia1_slider">
-            <property name="cursor">
-             <cursorShape>OpenHandCursor</cursorShape>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <spacer name="horizontalSpacer_32">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSlider" name="p_wave_arrhythmia_slider">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+                <property name="sliderPosition">
+                 <number>1</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="invertedAppearance">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_31">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>P wave</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QSlider" name="ecg_arrhythmia2_slider">
-            <property name="cursor">
-             <cursorShape>OpenHandCursor</cursorShape>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_22">
+              <item>
+               <spacer name="horizontalSpacer_33">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSlider" name="sv_arrhythmia_slider">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>500</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_34">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>SV</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QSlider" name="ecg_arrhythmia3_slider">
-            <property name="cursor">
-             <cursorShape>OpenHandCursor</cursorShape>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_15">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_32">
+              <item>
+               <spacer name="horizontalSpacer_35">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSlider" name="nr_arrhythmia_slider">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>1000</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>500</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_40">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>NR</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -2173,6 +2361,12 @@ border:none;</string>
               <property name="maximum">
                <number>100</number>
               </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>50</number>
               </property>
@@ -2221,6 +2415,12 @@ border:none;</string>
               </property>
               <property name="maximum">
                <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>50</number>
@@ -2271,6 +2471,12 @@ border:none;</string>
               <property name="maximum">
                <number>100</number>
               </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>50</number>
               </property>
@@ -2319,6 +2525,12 @@ border:none;</string>
               </property>
               <property name="maximum">
                <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>50</number>
@@ -2369,6 +2581,12 @@ border:none;</string>
               <property name="maximum">
                <number>100</number>
               </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>50</number>
               </property>
@@ -2417,6 +2635,12 @@ border:none;</string>
               </property>
               <property name="maximum">
                <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>50</number>
@@ -2467,6 +2691,12 @@ border:none;</string>
               <property name="maximum">
                <number>100</number>
               </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>50</number>
               </property>
@@ -2515,6 +2745,12 @@ border:none;</string>
               </property>
               <property name="maximum">
                <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>50</number>
@@ -2565,6 +2801,12 @@ border:none;</string>
               <property name="maximum">
                <number>100</number>
               </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>50</number>
               </property>
@@ -2613,6 +2855,12 @@ border:none;</string>
               </property>
               <property name="maximum">
                <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>50</number>

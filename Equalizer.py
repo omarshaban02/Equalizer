@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pyqtgraph as pg
 from threading import Thread
 from time import sleep
+import pandas as pd
 
 
 class SignalSlice(object):
@@ -220,7 +221,8 @@ class Signal(object):
 
     @property
     def signal_fft(self):
-        self._signal_fft = self.signal_modified_amplitudes * np.exp(self.signal_modified_phases * 1j)
+        self._signal_fft = self.signal_modified_amplitudes * \
+            np.exp(self.signal_modified_phases * 1j)
         return self._signal_fft
 
     @signal_fft.setter
@@ -270,7 +272,8 @@ class Signal(object):
 
     @property
     def signal_frequencies(self):
-        self._signal_frequencies = fftfreq(int(self.number_of_samples), 1 / self.sampling_rate)
+        self._signal_frequencies = fftfreq(
+            int(self.number_of_samples), 1 / self.sampling_rate)
         return self._signal_frequencies
 
     @property
@@ -280,6 +283,7 @@ class Signal(object):
     @signal_amplitudes.setter
     def signal_amplitudes(self, value):
         self._signal_amplitudes = value
+
     @property
     def signal_modified_amplitudes(self):
         return self._signal_modified_amplitudes
@@ -294,7 +298,8 @@ class Signal(object):
 
     @signal_phases.setter
     def signal_phases(self, value):
-       self._signal_phases = value
+        self._signal_phases = value
+
     @property
     def signal_modified_phases(self):
         return self._signal_modified_phases
@@ -305,12 +310,14 @@ class Signal(object):
 
     @property
     def original_signal_spectrogram(self):
-        _, _, self._original_signal_spectrogram = spectrogram(self.original_signal, fs=self.sampling_rate)
+        _, _, self._original_signal_spectrogram = spectrogram(
+            self.original_signal, fs=self.sampling_rate)
         return self._original_signal_spectrogram
 
     @property
     def equalized_signal_spectrogram(self):
-        _, _, self._equalized_signal_spectrogram = spectrogram(self.signal_ifft, fs=self.sampling_rate)
+        _, _, self._equalized_signal_spectrogram = spectrogram(
+            self.signal_ifft, fs=self.sampling_rate)
 
         return self._equalized_signal_spectrogram
 
@@ -375,6 +382,7 @@ class Signal(object):
     @signal_zxx.setter
     def signal_zxx(self, value):
         self._signal_zxx = value
+
     @property
     def signal_modified_zxx(self):
         return self._signal_modified_zxx
@@ -382,9 +390,6 @@ class Signal(object):
     @signal_modified_zxx.setter
     def signal_modified_zxx(self, value):
         self._signal_modified_zxx = value
-        
-        
-        
 
     def equalize(self, window_type, equalizing_factor, freqs_range=None, slice_name=None):
         # apply stft
@@ -396,30 +401,40 @@ class Signal(object):
                     window = 0
                     window_length = len(freqs_indices)
                     if window_type == 'hamming':
-                        window = windows.hamming(window_length) * equalizing_factor
+                        window = windows.hamming(
+                            window_length) * equalizing_factor
                     elif window_type == 'hanning':
-                        window = windows.hann(window_length) * equalizing_factor
+                        window = windows.hann(
+                            window_length) * equalizing_factor
                     elif window_type == 'gaussian':
-                        window = windows.gaussian(window_length) * equalizing_factor
+                        window = windows.gaussian(
+                            window_length) * equalizing_factor
                     elif window_type == 'rectangle':
                         window = np.ones(window_length) * equalizing_factor
                     else:
                         raise ValueError('Unknown window')
 
-                    n_start = int(time_range[0] * self.n_time_segments / self.duration)
-                    n_end = int(time_range[1] * self.n_time_segments / self.duration)
-                    if n_end < 0: n_end = -1
+                    n_start = int(
+                        time_range[0] * self.n_time_segments / self.duration)
+                    n_end = int(
+                        time_range[1] * self.n_time_segments / self.duration)
+                    if n_end < 0:
+                        n_end = -1
                     for i, w in zip(freqs_indices, window):
-                        self.signal_modified_zxx[i, n_start:n_end] = w * self.signal_zxx[i, n_start:n_end]
-                    self.signal_modified_amplitudes = np.abs(fft(self.signal_istft)) 
-                    self.signal_modified_phases = np.angle(fft(self.signal_istft)) 
-                        
-        # apply fft
+                        self.signal_modified_zxx[i, n_start:n_end] = w * \
+                            self.signal_zxx[i, n_start:n_end]
+                    self.signal_modified_amplitudes = np.abs(
+                        fft(self.signal_istft))
+                    self.signal_modified_phases = np.angle(
+                        fft(self.signal_istft))
+
+                    # apply fft
         if freqs_range is not None:
             f_start = freqs_range[0]
             f_end = freqs_range[1]
             # get bins corresponding to the frequencies using formula f/f_s = k/N
-            k_start = int((f_start / self.sampling_rate) * self.number_of_samples)
+            k_start = int((f_start / self.sampling_rate)
+                          * self.number_of_samples)
             k_end = int((f_end / self.sampling_rate) * self.number_of_samples)
             # create hamming window for wolf
             window_length = k_end - k_start
@@ -435,13 +450,16 @@ class Signal(object):
             else:
                 raise ValueError('Unknown window')
 
-            self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
+            self.signal_modified_amplitudes[k_start:k_end] = window * \
+                self.signal_amplitudes[k_start:k_end]
             # for negative part
             temp_f_start = f_start
             f_start = -f_end
             f_end = -temp_f_start
-            k_start = int(self.number_of_samples - (-f_start / self.sampling_rate) * self.number_of_samples)
-            k_end = int(self.number_of_samples - (-f_end / self.sampling_rate) * self.number_of_samples)
+            k_start = int(self.number_of_samples - (-f_start /
+                          self.sampling_rate) * self.number_of_samples)
+            k_end = int(self.number_of_samples - (-f_end /
+                        self.sampling_rate) * self.number_of_samples)
             window_length = k_end - k_start
             window = 0
             if window_type == 'hamming':
@@ -454,35 +472,45 @@ class Signal(object):
                 window = equalizing_factor
             else:
                 raise ValueError('Unknown window')
-            self.signal_modified_amplitudes[k_start:k_end] = window * self.signal_amplitudes[k_start:k_end]
+            self.signal_modified_amplitudes[k_start:k_end] = window * \
+                self.signal_amplitudes[k_start:k_end]
 
     def import_signal(self, file, mode='fft'):
-        file = wave.open(file, "rb")
-        nframes = file.getnframes()
-        data = file.readframes(nframes)
-        self.original_signal = np.frombuffer(data, dtype=np.int16)
-        self.sampling_rate = file.getframerate()
-        self.sample_width = file.getsampwidth()
-        self.nchannels = file.getnchannels()
-        if mode == 'fft':
+        if mode == 'fft' or mode == 'stft':
+            file = wave.open(file, "rb")
+            nframes = file.getnframes()
+            data = file.readframes(nframes)
+            self.original_signal = np.frombuffer(data, dtype=np.int16)
+            self.sampling_rate = file.getframerate()
+            self.sample_width = file.getsampwidth()
+            self.nchannels = file.getnchannels()
             self.mode = 'fft'
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
             self.signal_modified_amplitudes = np.abs(sig_fft)
             self.signal_modified_phases = np.angle(sig_fft)
+            if mode == 'stft':
+                self.mode = 'stft'
+                self.signal_stft = stft(
+                    self.original_signal, fs=self.sampling_rate)
+                self.signal_zxx = self.signal_stft[2]
+                self.signal_modified_zxx = self.signal_stft[2].copy()
+                self.n_time_segments = len(self.signal_stft[1])
 
-        elif mode == 'stft':
-            self.mode = 'stft'
+        elif mode == 'ecg':
+            data = pd.read_csv(file).to_numpy()
+            self.original_signal = data.transpose()[1]
+            Ts = data.transpose()[0][1] - data.transpose()[0][0]
+            self.sampling_rate = int(1 / Ts)
+            print(np.round(np.max(self.original_signal), 2))
+            self.nchannels = 1
+            self.mode = 'ecg'
             sig_fft = fft(self.original_signal)
             self.signal_amplitudes = np.abs(sig_fft)
             self.signal_phases = np.angle(sig_fft)
             self.signal_modified_amplitudes = np.abs(sig_fft)
             self.signal_modified_phases = np.angle(sig_fft)
-            self.signal_stft = stft(self.original_signal, fs=self.sampling_rate)
-            self.signal_zxx = self.signal_stft[2]
-            self.signal_modified_zxx = self.signal_stft[2].copy()
-            self.n_time_segments = len(self.signal_stft[1])
 
         else:
             raise ValueError('Invalid mode')
@@ -497,7 +525,8 @@ class Signal(object):
         if mode == 'stft':
             data = np.array(self.signal_istft, dtype=np.int16)
         if self.nchannels > 1:
-            modified_channels = np.array(np.split(data, self.nchannels, axis=0), dtype=np.int16)
+            modified_channels = np.array(
+                np.split(data, self.nchannels, axis=0), dtype=np.int16)
         bitrate = 16
         with wave.open(f"{filename}.wav", "wb") as out_file:
             out_file.setframerate(self.sampling_rate)
@@ -511,20 +540,26 @@ class Signal(object):
 
 
 animals_slices = []
-animals_slices.append(SignalSlice('elephant', [3, 4, *[i for i in range(6, 21)]], [5, -1]))
+animals_slices.append(SignalSlice(
+    'elephant', [i for i in range(0, 129)], [5, -1]))
 animals_slices.append(SignalSlice('wolf', [4, 5, 8, 10, 11, 2, 3], [3, 6]))
-animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [2, 3.5]))
-animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [6, 7]))
-animals_slices.append(SignalSlice('frog', [0, 2, 4, 6, 9, 10, 11, 12, 13, 1, 5], [3.8, 4.5]))
-animals_slices.append(SignalSlice('cow', [i for i in range(0, 25)], [0, 1]))
-animals_slices.append(SignalSlice('dolphin', [i for i in range(0, 30)], [1, 2.5]))
+animals_slices.append(SignalSlice(
+    'horse', [i for i in range(4, 18)], [2, 3.8]))
+# animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [6, 7]))
+animals_slices.append(SignalSlice(
+    'frog', [0, 2, 4, 6, 9, 10, 11, 12, 13, 1, 5], [3.8, 4.5]))
+animals_slices.append(SignalSlice('cow', [i for i in range(0, 129)], [0, 1]))
+animals_slices.append(SignalSlice(
+    'dolphin', [i for i in range(0, 30)], [1, 2.5]))
+animals_slices.append(SignalSlice('goat', [], []))
 musics_slices = []
 musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [1, 3.5]))
 musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [4, 7]))
 musics_slices.append(SignalSlice('guitar', [i for i in range(1, 4)], [7.5, 9]))
 musics_slices.append(SignalSlice('piano', [i for i in range(0, 9)], [0, 4.5]))
 musics_slices.append(SignalSlice('piano', [0, 3, 5, 6, 7, 8, 9], [0, 4.5]))
-musics_slices.append(SignalSlice('trumpet', [i for i in range(4, 18)], [5.5, 7.5]))
+musics_slices.append(SignalSlice(
+    'trumpet', [i for i in range(4, 18)], [5.5, 7.5]))
 
 # sig = Signal()
 # sig.import_signal(r"signal_files/animals.wav", mode='stft')
