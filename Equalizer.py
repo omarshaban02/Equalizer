@@ -540,26 +540,19 @@ class Signal(object):
 
 
 animals_slices = []
-animals_slices.append(SignalSlice(
-    'elephant', [i for i in range(0, 129)], [5, -1]))
-animals_slices.append(SignalSlice('wolf', [4, 5, 8, 10, 11, 2, 3], [3, 6]))
-animals_slices.append(SignalSlice(
-    'horse', [i for i in range(4, 18)], [2, 3.8]))
-# animals_slices.append(SignalSlice('horse', [i for i in range(4, 18)], [6, 7]))
-animals_slices.append(SignalSlice(
-    'frog', [0, 2, 4, 6, 9, 10, 11, 12, 13, 1, 5], [3.8, 4.5]))
-animals_slices.append(SignalSlice('cow', [i for i in range(0, 129)], [0, 1]))
-animals_slices.append(SignalSlice(
-    'dolphin', [i for i in range(0, 30)], [1, 2.5]))
-animals_slices.append(SignalSlice('goat', [], []))
+animals_slices.append(SignalSlice('elephant',[i for i in range(0,6)], [0.4,2.3]))
+animals_slices.append(SignalSlice('elephant',[i for i in range(0,128)], [2.3,3]))
+animals_slices.append(SignalSlice('wolf',[i for i in range(0,6)], [3,5.7]))
+animals_slices.append(SignalSlice('horse',[i for i in range(0,128)], [5.7,-1]))
+animals_slices.append(SignalSlice('frog',[i for i in range(0,128)], [0,0.4]))
+animals_slices.append(SignalSlice('cow',[i for i in range(6,128)], [3,5.7]))
+animals_slices.append(SignalSlice('dolphin',[i for i in range(6,128)], [0.4,2.3]))
 musics_slices = []
-musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [1, 3.5]))
-musics_slices.append(SignalSlice('flute', [i for i in range(1, 4)], [4, 7]))
-musics_slices.append(SignalSlice('guitar', [i for i in range(1, 4)], [7.5, 9]))
-musics_slices.append(SignalSlice('piano', [i for i in range(0, 9)], [0, 4.5]))
-musics_slices.append(SignalSlice('piano', [0, 3, 5, 6, 7, 8, 9], [0, 4.5]))
-musics_slices.append(SignalSlice(
-    'trumpet', [i for i in range(4, 18)], [5.5, 7.5]))
+musics_slices.append(SignalSlice('violin', [i for i in range(7, 128)], [3, 6]))
+musics_slices.append(SignalSlice('flute', [i for i in range(0, 7)], [3, 6]))
+musics_slices.append(SignalSlice('guitar', [i for i in range(0, 128)], [6, -1]))
+musics_slices.append(SignalSlice('piano', [i for i in range(0, 7)], [0, 3.1]))
+musics_slices.append(SignalSlice('trumpet', [i for i in range(7, 128)], [0, 3.1]))
 
 # sig = Signal()
 # sig.import_signal(r"signal_files/animals.wav", mode='stft')
