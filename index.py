@@ -50,6 +50,11 @@ def create_plot_widget(graphics_view, object_name="", bottom_label="", left_labe
     return widget, signal_viewer
 
 
+def clear_widgets(widgets_list):
+    for widget in widgets_list:
+        widget.clear()
+
+
 class MainApp(QMainWindow, ui):
     _show_hide_flag = True
 
@@ -246,26 +251,29 @@ class MainApp(QMainWindow, ui):
             self.original_sound_player.pause()
 
     def reload_after_equalizing(self, ift):
-        self.equalized_signal_viewer.clear()
+        clear_widgets([self.equalized_signal_viewer,
+                       self.frequency_plot_widget,
+                       self.equalized_spectro_plot_widget])
+
         self.equalized_signal_viewer.load_dataset(ift)
         self.equalized_signal_viewer.add_signal()
 
-        self.frequency_plot_widget.clear()
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_modified_amplitudes[
                                                   :len(self.signal.signal_frequencies)]))
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
 
-        self.equalized_spectro_plot_widget.clear()
         plot_spectrogram(self.equalized_spectro_plot_widget,
                          self.signal.equalized_signal_spectrogram)
 
     def equalize_by_sliders(self):
         if self.sender() in self.ranges_sliders.keys():
-            self.signal.equalize(self.smoothing_window, self.sender().value() / 500, freqs_range=self.ranges_sliders[self.sender()])
+            self.signal.equalize(self.smoothing_window, self.sender().value() / 500,
+                                 freqs_range=self.ranges_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_ifft)
         elif self.sender() in self.slices_sliders.keys():
-            self.signal.equalize(self.smoothing_window, self.sender().value() / 500, slice_name=self.slices_sliders[self.sender()])
+            self.signal.equalize(self.smoothing_window, self.sender().value() / 500,
+                                 slice_name=self.slices_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self, w_type, value, freqs_range, n_slider=1):
@@ -286,8 +294,13 @@ class MainApp(QMainWindow, ui):
 
     def open_signal(self):
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
-                                                   '*', options=options)
+        if self.ecg_mode_selected:
+            file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
+                                                       '*.csv', options=options)
+        else:
+            file_name, _ = QFileDialog.getOpenFileName(self, 'Open Signal to Equalizer', '',
+                                                       '*.wav', options=options)
+
         if not self.ecg_mode_selected:
             self.signal.import_signal(file_name, "stft")
         else:
@@ -297,11 +310,12 @@ class MainApp(QMainWindow, ui):
         self.original_sound_player = Player(self.signal, mode='fft')
         self.original_sound_player.start()
         self.original_sound_player.pause()
-        self.original_signal_viewer.clear()
-        self.equalized_signal_viewer.clear()
-        self.frequency_plot_widget.clear()
-        self.original_spectro_plot_widget.clear()
-        self.equalized_spectro_plot_widget.clear()
+
+        clear_widgets([self.original_signal_viewer,
+                       self.equalized_signal_viewer,
+                       self.frequency_plot_widget,
+                       self.original_spectro_plot_widget,
+                       self.equalized_spectro_plot_widget])
 
         self.original_signal_viewer.load_dataset(self.signal.original_signal)
         self.equalized_signal_viewer.load_dataset(self.signal.original_signal)
@@ -402,6 +416,12 @@ class MainApp(QMainWindow, ui):
             self.equalized_signal_viewer.yRange = [-2, 2]
         else:
             self.ecg_mode_selected = False
+
+        clear_widgets([self.original_signal_viewer,
+                       self.equalized_signal_viewer,
+                       self.frequency_plot_widget,
+                       self.original_spectro_plot_widget,
+                       self.equalized_spectro_plot_widget])
 
     def show_hide_spectro_widget(self):
         if self._show_hide_flag:
