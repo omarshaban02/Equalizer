@@ -210,6 +210,29 @@ class Signal(object):
         self._original_signal_spectrogram = None
         self._equalized_signal_spectrogram = None
         self._signal_slices = None
+        self._current_windows = []
+    
+    @property
+    def windows_plots(self):
+        plots = []
+        for window in self.current_windows:
+            range = (window[0], window[1])
+            peak = window[2]
+            adjusted_window = 20*np.log10(window[3]*peak)
+            x_data = np.arange(range[0], range[1])
+            pen = pg.mkPen('red')
+            plot = pg.PlotDataItem(x_data,adjusted_window)
+            plot.setPen(pen)
+            plots.append(plot)
+        return plots
+    
+    @property
+    def current_windows(self):
+        return self._current_windows
+
+    @current_windows.setter
+    def current_windows(self, value):
+        self._current_windows = value
 
     @property
     def original_signal(self):
@@ -394,23 +417,36 @@ class Signal(object):
     def equalize(self, window_type, equalizing_factor, freqs_range=None, slice_name=None):
         # apply stft
         if slice_name is not None:
+            self.current_windows = []
             for slice in self.signal_slices:
                 if slice.name == slice_name:
+                    _c_window = 0
                     freqs_indices = slice.freqs_indices
                     time_range = slice.time_range
+                    f_range = (np.floor(self.signal_stft_freqs[freqs_indices[0]]),
+                               np.floor(self.signal_stft_freqs[freqs_indices[-1]]))
                     window = 0
+                    fwindow =0
                     window_length = len(freqs_indices)
+                    window_freq_length = int(f_range[1]-f_range[0])
                     if window_type == 'hamming':
                         window = windows.hamming(
                             window_length) * equalizing_factor
+                        fwindow = windows.hamming(
+                            window_freq_length) * equalizing_factor
                     elif window_type == 'hanning':
                         window = windows.hann(
                             window_length) * equalizing_factor
+                        fwindow = windows.hann(
+                            window_freq_length) * equalizing_factor
                     elif window_type == 'gaussian':
                         window = windows.gaussian(
                             window_length) * equalizing_factor
+                        fwindow = windows.gaussian(
+                            window_freq_length) * equalizing_factor
                     elif window_type == 'rectangle':
                         window = np.ones(window_length) * equalizing_factor
+                        fwindow = np.ones(window_freq_length) * equalizing_factor
                     else:
                         raise ValueError('Unknown window')
 
@@ -420,6 +456,10 @@ class Signal(object):
                         time_range[1] * self.n_time_segments / self.duration)
                     if n_end < 0:
                         n_end = -1
+                    local_peak = np.abs(np.max(self.signal_modified_zxx[freqs_indices[0]:freqs_indices[-1], n_start:n_end]))
+                    _c_window = (f_range[0],f_range[1],local_peak,fwindow)
+                    self.current_windows.append(_c_window)
+
                     for i, w in zip(freqs_indices, window):
                         self.signal_modified_zxx[i, n_start:n_end] = w * \
                             self.signal_zxx[i, n_start:n_end]
@@ -430,6 +470,7 @@ class Signal(object):
 
                     # apply fft
         if freqs_range is not None:
+            self.current_windows = []
             f_start = freqs_range[0]
             f_end = freqs_range[1]
             # get bins corresponding to the frequencies using formula f/f_s = k/N
@@ -438,20 +479,31 @@ class Signal(object):
             k_end = int((f_end / self.sampling_rate) * self.number_of_samples)
             # create hamming window for wolf
             window_length = k_end - k_start
+            window_freq_length = f_end - f_start
             window = 0
+            fwindow = 0
             if window_type == 'hamming':
                 window = windows.hamming(window_length) * equalizing_factor
+                fwindow = windows.hamming(window_freq_length) * equalizing_factor
             elif window_type == 'hanning':
                 window = windows.hann(window_length) * equalizing_factor
+                fwindow = windows.hann(window_freq_length) * equalizing_factor
             elif window_type == 'gussian':
                 window = windows.gaussian(window_length) * equalizing_factor
+                fwindow = windows.gaussian(window_freq_length) * equalizing_factor
             elif window_type == 'rectangle':
-                window = equalizing_factor
+                window = np.ones(window_length) *  equalizing_factor
+                fwindow = np.ones(window_freq_length) *  equalizing_factor
             else:
                 raise ValueError('Unknown window')
-
             self.signal_modified_amplitudes[k_start:k_end] = window * \
                 self.signal_amplitudes[k_start:k_end]
+            # for x,y in zip (range(f_start,f_end),20*np.log10(self.signal_modified_amplitudes[k_start:k_end])):
+            #     _c_window[0].append(x)
+            #     _c_window[1].append(y)
+            local_peak = np.max(self.signal_modified_amplitudes[k_start:k_end])
+            _c_window = (f_start,f_end,local_peak,fwindow)
+            self.current_windows.append(_c_window)
             # for negative part
             temp_f_start = f_start
             f_start = -f_end
@@ -461,19 +513,33 @@ class Signal(object):
             k_end = int(self.number_of_samples - (-f_end /
                         self.sampling_rate) * self.number_of_samples)
             window_length = k_end - k_start
+            window_freq_length = f_end -f_start
             window = 0
+            fwindow = 0
             if window_type == 'hamming':
                 window = windows.hamming(window_length) * equalizing_factor
+                fwindow = windows.hamming(window_freq_length) * equalizing_factor
             elif window_type == 'hanning':
                 window = windows.hann(window_length) * equalizing_factor
+                fwindow = windows.hann(window_freq_length) * equalizing_factor
             elif window_type == 'gussian':
                 window = windows.gaussian(window_length) * equalizing_factor
+                fwindow = windows.gaussian(window_freq_length) * equalizing_factor
             elif window_type == 'rectangle':
-                window = equalizing_factor
+                window = np.ones(window_length) *  equalizing_factor
+                fwindow = np.ones(window_freq_length) *  equalizing_factor
             else:
                 raise ValueError('Unknown window')
             self.signal_modified_amplitudes[k_start:k_end] = window * \
                 self.signal_amplitudes[k_start:k_end]
+            _c_window = 0
+            # for x,y in zip (range(f_start,f_end),20*np.log10(self.signal_modified_amplitudes[k_start:k_end])):
+            #     _c_window[0].append(x)
+            #     _c_window[1].append(y)
+            local_peak = np.max(self.signal_modified_amplitudes[k_start:k_end])
+            _c_window = (f_start,f_end,local_peak,fwindow)
+            self.current_windows.append(_c_window)
+            
 
     def import_signal(self, file, mode='fft'):
         if mode == 'fft' or mode == 'stft':

@@ -262,7 +262,12 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_modified_amplitudes[
                                                   :len(self.signal.signal_frequencies)]))
+        
+        
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
+        
+        for item in self.signal.windows_plots:
+            self.frequency_plot_widget.addItem(item)
 
         plot_spectrogram(self.equalized_spectro_plot_widget,
                          self.signal.equalized_signal_spectrogram)
@@ -333,6 +338,7 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
+        
 
         plot_spectrogram(self.original_spectro_plot_widget,
                          self.signal.original_signal_spectrogram)
