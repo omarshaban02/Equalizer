@@ -106,6 +106,7 @@ class MainApp(QMainWindow, ui):
             self.cow_slider: "cow",
             self.dolphin_slider: "dolphin",
             self.elephant_slider: "elephant",
+            self.frog_slider: "frog",
 
             self.trumpet_slider: "trumpet",
             self.piano_slider: "piano",
@@ -268,11 +269,15 @@ class MainApp(QMainWindow, ui):
 
     def equalize_by_sliders(self):
         if self.sender() in self.ranges_sliders.keys():
-            self.signal.equalize(self.smoothing_window, self.sender().value() / 500,
+            factor = 10**(self.sender().value())
+            
+            self.signal.equalize(self.smoothing_window,  factor,
                                  freqs_range=self.ranges_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_ifft)
         elif self.sender() in self.slices_sliders.keys():
-            self.signal.equalize(self.smoothing_window, self.sender().value() / 500,
+            factor = 10**(self.sender().value())
+            print(self.sender().value(),factor)
+            self.signal.equalize(self.smoothing_window, factor,
                                  slice_name=self.slices_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_istft)
 
