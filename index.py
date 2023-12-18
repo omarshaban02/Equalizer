@@ -20,7 +20,7 @@ def plot_spectrogram(widget, sxx):
     img = pg.ImageItem()
     img.setImage(np.rot90(sxx))
     widget.addItem(img)
-    widget.setYRange(0, 5 * np.log10(np.max(sxx)))
+    # widget.setYRange(0, 5 * np.log10(np.max(sxx)))
 
     # Set colormap
     colormap = pg.colormap.get('viridis')
@@ -112,6 +112,7 @@ class MainApp(QMainWindow, ui):
             self.piano_slider: "piano",
             self.guitar_slider: "guitar",
             self.flute_slider: "flute",
+            self.violin_slider: "violin"
         }
 
         self.ecg_arrs_max_f_dict = {
@@ -262,10 +263,9 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_modified_amplitudes[
                                                   :len(self.signal.signal_frequencies)]))
-        
-        
+
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
-        
+
         for item in self.signal.windows_plots:
             self.frequency_plot_widget.addItem(item)
 
@@ -274,19 +274,20 @@ class MainApp(QMainWindow, ui):
 
     def equalize_by_sliders(self):
         if self.sender() in self.ranges_sliders.keys():
-            factor = 10**(self.sender().value())
-            
-            self.signal.equalize(self.smoothing_window,  factor,
+            factor = 10 ** (self.sender().value())
+
+            self.signal.equalize(self.smoothing_window, factor,
                                  freqs_range=self.ranges_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_ifft)
         elif self.sender() in self.slices_sliders.keys():
-            factor = 10**(self.sender().value())
-            print(self.sender().value(),factor)
+            factor = 10 ** (self.sender().value())
+            print(self.sender().value(), factor)
             self.signal.equalize(self.smoothing_window, factor,
                                  slice_name=self.slices_sliders[self.sender()])
             self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self, w_type, value, freqs_range, n_slider=1):
+        factor = 10 ** (self.sender().value())
         peak = np.round(np.max(self.signal.original_signal), 2)
         if self.ecg_mode_selected:
             if peak == self.ecg_arrs_max_f_dict["p wave"] and n_slider == 1:
@@ -338,7 +339,6 @@ class MainApp(QMainWindow, ui):
         self.frequency_plot_item.setData(self.signal.signal_frequencies, 20 *
                                          np.log10(self.signal.signal_amplitudes[:len(self.signal.signal_frequencies)]))
         self.frequency_plot_widget.addItem(self.frequency_plot_item)
-        
 
         plot_spectrogram(self.original_spectro_plot_widget,
                          self.signal.original_signal_spectrogram)
