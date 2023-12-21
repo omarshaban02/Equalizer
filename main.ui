@@ -854,7 +854,6 @@ border:none;</string>
           <font>
            <family>Ubuntu</family>
            <pointsize>-1</pointsize>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -1348,97 +1347,6 @@ border:none;</string>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <property name="spacing">
-             <number>12</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSlider" name="goat_slider">
-                <property name="cursor">
-                 <cursorShape>OpenHandCursor</cursorShape>
-                </property>
-                <property name="minimum">
-                 <number>-10</number>
-                </property>
-                <property name="maximum">
-                 <number>10</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="pageStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>0</number>
-                </property>
-                <property name="sliderPosition">
-                 <number>0</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="res.qrc">
-                <normaloff>:/icons/icons/goat.png</normaloff>:/icons/icons/goat.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <property name="spacing">
              <number>3</number>
@@ -1749,7 +1657,7 @@ border:none;</string>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_19">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <property name="spacing">
@@ -1912,6 +1820,94 @@ border:none;</string>
               <property name="icon">
                <iconset resource="res.qrc">
                 <normaloff>:/icons/icons/flute.png</normaloff>:/icons/icons/flute.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <property name="spacing">
+             <number>12</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_19">
+              <item>
+               <spacer name="horizontalSpacer_27">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSlider" name="violin_slider">
+                <property name="cursor">
+                 <cursorShape>OpenHandCursor</cursorShape>
+                </property>
+                <property name="minimum">
+                 <number>-10</number>
+                </property>
+                <property name="maximum">
+                 <number>10</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+                <property name="sliderPosition">
+                 <number>0</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_28">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_12">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="res.qrc">
+                <normaloff>:/icons/icons/violin.png</normaloff>:/icons/icons/violin.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -2152,22 +2148,22 @@ border:none;</string>
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
                 <property name="minimum">
-                 <number>1</number>
+                 <number>-10</number>
                 </property>
                 <property name="maximum">
-                 <number>500</number>
+                 <number>10</number>
                 </property>
                 <property name="singleStep">
-                 <number>10</number>
+                 <number>1</number>
                 </property>
                 <property name="pageStep">
                  <number>10</number>
                 </property>
                 <property name="value">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="sliderPosition">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -2176,7 +2172,7 @@ border:none;</string>
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="invertedAppearance">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -2230,22 +2226,25 @@ border:none;</string>
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
                 <property name="minimum">
-                 <number>1</number>
+                 <number>-10</number>
                 </property>
                 <property name="maximum">
-                 <number>1000</number>
+                 <number>10</number>
                 </property>
                 <property name="singleStep">
-                 <number>10</number>
+                 <number>1</number>
                 </property>
                 <property name="pageStep">
                  <number>10</number>
                 </property>
                 <property name="value">
-                 <number>500</number>
+                 <number>0</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="invertedAppearance">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -2299,22 +2298,25 @@ border:none;</string>
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
                 <property name="minimum">
-                 <number>1</number>
+                 <number>-10</number>
                 </property>
                 <property name="maximum">
-                 <number>1000</number>
+                 <number>10</number>
                 </property>
                 <property name="singleStep">
-                 <number>10</number>
+                 <number>1</number>
                 </property>
                 <property name="pageStep">
                  <number>10</number>
                 </property>
                 <property name="value">
-                 <number>500</number>
+                 <number>0</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="invertedAppearance">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>

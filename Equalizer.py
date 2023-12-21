@@ -211,21 +211,21 @@ class Signal(object):
         self._equalized_signal_spectrogram = None
         self._signal_slices = None
         self._current_windows = []
-    
+
     @property
     def windows_plots(self):
         plots = []
         for window in self.current_windows:
             range = (window[0], window[1])
             peak = window[2]
-            adjusted_window = 20*np.log10(window[3]*peak)
+            adjusted_window = 20 * np.log10(window[3] * peak)
             x_data = np.arange(range[0], range[1])
             pen = pg.mkPen('red')
-            plot = pg.PlotDataItem(x_data,adjusted_window)
+            plot = pg.PlotDataItem(x_data, adjusted_window)
             plot.setPen(pen)
             plots.append(plot)
         return plots
-    
+
     @property
     def current_windows(self):
         return self._current_windows
@@ -245,7 +245,7 @@ class Signal(object):
     @property
     def signal_fft(self):
         self._signal_fft = self.signal_modified_amplitudes * \
-            np.exp(self.signal_modified_phases * 1j)
+                           np.exp(self.signal_modified_phases * 1j)
         return self._signal_fft
 
     @signal_fft.setter
@@ -426,9 +426,9 @@ class Signal(object):
                     f_range = (np.floor(self.signal_stft_freqs[freqs_indices[0]]),
                                np.floor(self.signal_stft_freqs[freqs_indices[-1]]))
                     window = 0
-                    fwindow =0
+                    fwindow = 0
                     window_length = len(freqs_indices)
-                    window_freq_length = int(f_range[1]-f_range[0])
+                    window_freq_length = int(f_range[1] - f_range[0])
                     if window_type == 'hamming':
                         window = windows.hamming(
                             window_length) * equalizing_factor
@@ -456,13 +456,14 @@ class Signal(object):
                         time_range[1] * self.n_time_segments / self.duration)
                     if n_end < 0:
                         n_end = -1
-                    local_peak = np.abs(np.max(self.signal_modified_zxx[freqs_indices[0]:freqs_indices[-1], n_start:n_end]))
-                    _c_window = (f_range[0],f_range[1],local_peak,fwindow)
+                    local_peak = np.abs(
+                        np.max(self.signal_modified_zxx[freqs_indices[0]:freqs_indices[-1], n_start:n_end]))
+                    _c_window = (f_range[0], f_range[1], local_peak, fwindow)
                     self.current_windows.append(_c_window)
 
                     for i, w in zip(freqs_indices, window):
                         self.signal_modified_zxx[i, n_start:n_end] = w * \
-                            self.signal_zxx[i, n_start:n_end]
+                                                                     self.signal_zxx[i, n_start:n_end]
                     self.signal_modified_amplitudes = np.abs(
                         fft(self.signal_istft))
                     self.signal_modified_phases = np.angle(
@@ -492,28 +493,28 @@ class Signal(object):
                 window = windows.gaussian(window_length) * equalizing_factor
                 fwindow = windows.gaussian(window_freq_length) * equalizing_factor
             elif window_type == 'rectangle':
-                window = np.ones(window_length) *  equalizing_factor
-                fwindow = np.ones(window_freq_length) *  equalizing_factor
+                window = np.ones(window_length) * equalizing_factor
+                fwindow = np.ones(window_freq_length) * equalizing_factor
             else:
                 raise ValueError('Unknown window')
             self.signal_modified_amplitudes[k_start:k_end] = window * \
-                self.signal_amplitudes[k_start:k_end]
+                                                             self.signal_amplitudes[k_start:k_end]
             # for x,y in zip (range(f_start,f_end),20*np.log10(self.signal_modified_amplitudes[k_start:k_end])):
             #     _c_window[0].append(x)
             #     _c_window[1].append(y)
             local_peak = np.max(self.signal_modified_amplitudes[k_start:k_end])
-            _c_window = (f_start,f_end,local_peak,fwindow)
+            _c_window = (f_start, f_end, local_peak, fwindow)
             self.current_windows.append(_c_window)
             # for negative part
             temp_f_start = f_start
             f_start = -f_end
             f_end = -temp_f_start
             k_start = int(self.number_of_samples - (-f_start /
-                          self.sampling_rate) * self.number_of_samples)
+                                                    self.sampling_rate) * self.number_of_samples)
             k_end = int(self.number_of_samples - (-f_end /
-                        self.sampling_rate) * self.number_of_samples)
+                                                  self.sampling_rate) * self.number_of_samples)
             window_length = k_end - k_start
-            window_freq_length = f_end -f_start
+            window_freq_length = f_end - f_start
             window = 0
             fwindow = 0
             if window_type == 'hamming':
@@ -526,20 +527,19 @@ class Signal(object):
                 window = windows.gaussian(window_length) * equalizing_factor
                 fwindow = windows.gaussian(window_freq_length) * equalizing_factor
             elif window_type == 'rectangle':
-                window = np.ones(window_length) *  equalizing_factor
-                fwindow = np.ones(window_freq_length) *  equalizing_factor
+                window = np.ones(window_length) * equalizing_factor
+                fwindow = np.ones(window_freq_length) * equalizing_factor
             else:
                 raise ValueError('Unknown window')
             self.signal_modified_amplitudes[k_start:k_end] = window * \
-                self.signal_amplitudes[k_start:k_end]
+                                                             self.signal_amplitudes[k_start:k_end]
             _c_window = 0
             # for x,y in zip (range(f_start,f_end),20*np.log10(self.signal_modified_amplitudes[k_start:k_end])):
             #     _c_window[0].append(x)
             #     _c_window[1].append(y)
             local_peak = np.max(self.signal_modified_amplitudes[k_start:k_end])
-            _c_window = (f_start,f_end,local_peak,fwindow)
+            _c_window = (f_start, f_end, local_peak, fwindow)
             self.current_windows.append(_c_window)
-            
 
     def import_signal(self, file, mode='fft'):
         if mode == 'fft' or mode == 'stft':
@@ -606,13 +606,13 @@ class Signal(object):
 
 
 animals_slices = []
-animals_slices.append(SignalSlice('elephant',[i for i in range(0,6)], [0.4,2.3]))
-animals_slices.append(SignalSlice('elephant',[i for i in range(0,128)], [2.3,3]))
-animals_slices.append(SignalSlice('wolf',[i for i in range(0,6)], [3,5.7]))
-animals_slices.append(SignalSlice('horse',[i for i in range(0,128)], [5.7,-1]))
-animals_slices.append(SignalSlice('frog',[i for i in range(0,128)], [0,0.4]))
-animals_slices.append(SignalSlice('cow',[i for i in range(6,128)], [3,5.7]))
-animals_slices.append(SignalSlice('dolphin',[i for i in range(6,128)], [0.4,2.3]))
+animals_slices.append(SignalSlice('elephant', [i for i in range(0, 6)], [0.4, 2.3]))
+animals_slices.append(SignalSlice('elephant', [i for i in range(0, 128)], [2.3, 3]))
+animals_slices.append(SignalSlice('wolf', [i for i in range(0, 6)], [3, 5.7]))
+animals_slices.append(SignalSlice('horse', [i for i in range(0, 128)], [5.7, -1]))
+animals_slices.append(SignalSlice('frog', [i for i in range(0, 128)], [0, 0.4]))
+animals_slices.append(SignalSlice('cow', [i for i in range(6, 128)], [3, 5.7]))
+animals_slices.append(SignalSlice('dolphin', [i for i in range(6, 128)], [0.4, 2.3]))
 musics_slices = []
 musics_slices.append(SignalSlice('violin', [i for i in range(7, 128)], [3, 6]))
 musics_slices.append(SignalSlice('flute', [i for i in range(0, 7)], [3, 6]))
