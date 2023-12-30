@@ -98,7 +98,7 @@ class MainApp(QMainWindow, ui):
         }
         self.ecg_sliders = {
             self.p_wave_arrhythmia_slider: (5, 10),
-            self.sv_arrhythmia_slider: (30, 90),
+            self.sv_arrhythmia_slider: (5, 22),
             self.nr_arrhythmia_slider: (0, 10)
         }
         self.slices_sliders = {
@@ -109,11 +109,11 @@ class MainApp(QMainWindow, ui):
             self.elephant_slider: "elephant",
             self.frog_slider: "frog",
 
-            self.trumpet_slider: "trumpet",
+            # self.trumpet_slider: "trumpet",
             self.piano_slider: "piano",
-            self.guitar_slider: "guitar",
+            self.xylophone_slider: "xylophone",
             self.flute_slider: "flute",
-            self.violin_slider: "violin"
+            self.chimes_slider: "chimes"
         }
 
         self.ecg_arrs_max_f_dict = {

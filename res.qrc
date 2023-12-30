@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/xylophone-02.png</file>
+    <file>icons/chimes-01.png</file>
     <file>icons/violin.png</file>
     <file>icons/volume.svg</file>
     <file>icons/volume-mute.svg</file>

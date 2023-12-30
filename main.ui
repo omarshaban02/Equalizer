@@ -1679,7 +1679,7 @@ border:none;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QSlider" name="guitar_slider">
+               <widget class="QSlider" name="xylophone_slider">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
@@ -1731,7 +1731,7 @@ border:none;</string>
               </property>
               <property name="icon">
                <iconset resource="res.qrc">
-                <normaloff>:/icons/icons/guitar.png</normaloff>:/icons/icons/guitar.png</iconset>
+                <normaloff>:/icons/icons/xylophone-02.png</normaloff>:/icons/icons/xylophone-02.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1855,7 +1855,7 @@ border:none;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QSlider" name="violin_slider">
+               <widget class="QSlider" name="chimes_slider">
                 <property name="cursor">
                  <cursorShape>OpenHandCursor</cursorShape>
                 </property>
@@ -1907,95 +1907,7 @@ border:none;</string>
               </property>
               <property name="icon">
                <iconset resource="res.qrc">
-                <normaloff>:/icons/icons/violin.png</normaloff>:/icons/icons/violin.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_10">
-            <property name="spacing">
-             <number>12</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_17">
-              <item>
-               <spacer name="horizontalSpacer_20">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QSlider" name="trumpet_slider">
-                <property name="cursor">
-                 <cursorShape>OpenHandCursor</cursorShape>
-                </property>
-                <property name="minimum">
-                 <number>-10</number>
-                </property>
-                <property name="maximum">
-                 <number>10</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="pageStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>0</number>
-                </property>
-                <property name="sliderPosition">
-                 <number>0</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_11">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="res.qrc">
-                <normaloff>:/icons/icons/trumpet.png</normaloff>:/icons/icons/trumpet.png</iconset>
+                <normaloff>:/icons/icons/chimes-01.png</normaloff>:/icons/icons/chimes-01.png</iconset>
               </property>
               <property name="iconSize">
                <size>

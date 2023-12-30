@@ -270,6 +270,7 @@ class Signal(object):
     @property
     def signal_stft_freqs(self):
         self._signal_stft_freqs = self.signal_stft[0]
+        print(self._signal_stft_freqs)
         return self._signal_stft_freqs
 
     @property
@@ -605,20 +606,20 @@ class Signal(object):
                 out_file.writeframes(data.tobytes())
 
 
-animals_slices = []
-animals_slices.append(SignalSlice('elephant', [i for i in range(0, 6)], [0.4, 2.3]))
-animals_slices.append(SignalSlice('elephant', [i for i in range(0, 128)], [2.3, 3]))
-animals_slices.append(SignalSlice('wolf', [i for i in range(0, 6)], [3, 5.7]))
-animals_slices.append(SignalSlice('horse', [i for i in range(0, 128)], [5.7, -1]))
-animals_slices.append(SignalSlice('frog', [i for i in range(0, 128)], [0, 0.4]))
-animals_slices.append(SignalSlice('cow', [i for i in range(6, 128)], [3, 5.7]))
-animals_slices.append(SignalSlice('dolphin', [i for i in range(6, 128)], [0.4, 2.3]))
-musics_slices = []
-musics_slices.append(SignalSlice('violin', [i for i in range(7, 128)], [3, 6]))
-musics_slices.append(SignalSlice('flute', [i for i in range(0, 7)], [3, 6]))
-musics_slices.append(SignalSlice('guitar', [i for i in range(0, 128)], [6, -1]))
-musics_slices.append(SignalSlice('piano', [i for i in range(0, 7)], [0, 3.1]))
-musics_slices.append(SignalSlice('trumpet', [i for i in range(7, 128)], [0, 3.1]))
+animals_slices = [SignalSlice('elephant', [i for i in range(0, 6)], [0.4, 2.3]),
+                  SignalSlice('elephant', [i for i in range(0, 128)], [2.3, 3]),
+                  SignalSlice('wolf', [i for i in range(0, 6)], [3, 5.7]),
+                  SignalSlice('horse', [i for i in range(0, 128)], [5.7, -1]),
+                  SignalSlice('frog', [i for i in range(0, 128)], [0, 0.4]),
+                  SignalSlice('cow', [i for i in range(6, 128)], [3, 5.7]),
+                  SignalSlice('dolphin', [i for i in range(6, 128)], [0.4, 2.3])]
+
+musics_slices = [SignalSlice('chimes', [i for i in range(12, 40)], [0, 4.2]),  # chimes
+                 SignalSlice('flute', [i for i in range(0, 12)], [4.2, 13.95]),
+                 SignalSlice('xylophone', [i for i in range(40, 88)], [0, -1]),  # xyl
+                 SignalSlice('piano', [i for i in range(0, 12)], [0, 4.2]),
+                 # SignalSlice('trumpet', [i for i in range(7, 128)], [0, 3.1])
+                 ]
 
 # sig = Signal()
 # sig.import_signal(r"signal_files/animals.wav", mode='stft')
