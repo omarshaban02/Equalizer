@@ -1,3 +1,3 @@
 # Equalizer
 
-- This Readme file is currently updating
+- This Repo and its Readme file is currently updating
