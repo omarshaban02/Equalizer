@@ -98,7 +98,7 @@ class MainApp(QMainWindow, ui):
         }
         self.ecg_sliders = {
             self.p_wave_arrhythmia_slider: (5, 10),
-            self.sv_arrhythmia_slider: (5, 22),
+            self.sv_arrhythmia_slider: (6, 22),
             self.nr_arrhythmia_slider: (0, 10)
         }
         self.slices_sliders = {
@@ -115,13 +115,12 @@ class MainApp(QMainWindow, ui):
             self.flute_slider: "flute",
             self.chimes_slider: "chimes"
         }
-
         self.ecg_arrs_max_f_dict = {
-            0.96: self.p_wave_arrhythmia_slider,
-            1.5: self.sv_arrhythmia_slider,
-            0.39: self.nr_arrhythmia_slider
-        }
 
+            0.96: self.p_wave_arrhythmia_slider,
+            0.96459: self.sv_arrhythmia_slider,
+            0.38376: self.nr_arrhythmia_slider
+        }
         # Flags
         self.play_pause_state = True
         self.original_sound_player = None
@@ -289,13 +288,16 @@ class MainApp(QMainWindow, ui):
             self.reload_after_equalizing(self.signal.signal_istft)
 
     def ecg_equalize(self):
-        factor = 10 ** (self.sender().value())
-        peak = np.round(np.max(self.signal.original_signal), 2)
+        peak = np.round(np.max(self.signal.original_signal), 5)
 
         if self.sender() == self.ecg_arrs_max_f_dict[peak]:
-            self.signal.equalize(self.smoothing_window, factor,
-                                 freqs_range=self.ecg_sliders[self.sender()])
-            self.reload_after_equalizing(self.signal.signal_ifft)
+            factor = 10 ** (self.sender().value())
+
+        else:
+            factor = 10 ** (self.sender().value()/30)
+        self.signal.equalize(self.smoothing_window, factor,
+                             freqs_range=self.ecg_sliders[self.sender()])
+        self.reload_after_equalizing(self.signal.signal_ifft)
 
     def open_signal(self):
         options = QFileDialog.Options()

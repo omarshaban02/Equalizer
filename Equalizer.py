@@ -568,9 +568,10 @@ class Signal(object):
         elif mode == 'ecg':
             data = pd.read_csv(file).to_numpy()
             self.original_signal = data.transpose()[1]
+            self.original_signal = self.original_signal[:2660]
             Ts = data.transpose()[0][1] - data.transpose()[0][0]
             self.sampling_rate = int(1 / Ts)
-            print(np.round(np.max(self.original_signal), 2))
+            print(np.round(np.max(self.original_signal),5))
             self.nchannels = 1
             self.mode = 'ecg'
             sig_fft = fft(self.original_signal)

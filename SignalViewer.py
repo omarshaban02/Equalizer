@@ -4,7 +4,6 @@ import numpy as np
 import pyqtgraph as pg
 import random
 import pyqtgraph.exporters
-import aspose.pdf as ap
 from Equalizer import Signal
 
 class PlotSignal(object):
