@@ -1,10 +1,10 @@
 # Signal Equalizer Desktop Application
 
-Signal equalizer is a fundamental tool in the music and speech industry, as well as in various biomedical applications like hearing aid abnormalities detection. This project involves developing a desktop application that allows users to modify the magnitude of specific frequency components of a signal using sliders, and then reconstruct the signal with the applied changes.
+Signal equalizer is a fundamental tool in the music and speech industry and in various biomedical applications like hearing aid abnormalities detection. This project involves developing a desktop application that allows users to modify the magnitude of specific frequency components of a signal using sliders, and then reconstruct the signal with the applied changes.
 
-<div style="text-align: center;">
-    <img src="assests/video.gif" alt="App review" style=" display: block; margin: 0 auto;">
-</div>
+<p align="center">
+  <img src="assets/video.gif" alt="App review">
+</p>
 
 
 ## Table of Contents
@@ -41,7 +41,9 @@ Three ECG signals with specific types of arrhythmias. Each slider controls the m
 ![Screenshot 1](assests/ecg.png)
 
  ## Features
-
+ 
+- **User-Friendly Interface**: Intuitive and easy-to-navigate interface for seamless user experience.
+  
 - **Frequency Manipulation**: The application allows users to modify the magnitude of specific frequency components using sliders.
   
 - **Smoothing Windows**: Users can choose from four smoothing windows (Rectangle, Hamming, Hanning, Gaussian) and customize their parameters.
