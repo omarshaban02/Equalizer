@@ -3,7 +3,7 @@
 Signal equalizer is a fundamental tool in the music and speech industry and in various biomedical applications like hearing aid abnormalities detection. This project involves developing a desktop application that allows users to modify the magnitude of specific frequency components of a signal using sliders, and then reconstruct the signal with the applied changes.
 
 <p align="center">
-  <img src="assets/video.gif" alt="App review">
+  <img src="assests/video.gif" alt="App review">
 </p>
 
 
